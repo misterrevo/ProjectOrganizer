@@ -8,4 +8,5 @@ public interface UserServicePort {
     UserDto createUser(UserDto userDto);
     UserDto  getUserFromToken(String token);
     String getTokenFromUsername(String username);
+    UserDto loginUser(String login, String password);
 }
