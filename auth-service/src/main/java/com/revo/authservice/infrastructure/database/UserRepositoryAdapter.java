@@ -2,12 +2,14 @@ package com.revo.authservice.infrastructure.database;
 
 import com.revo.authservice.domain.dto.UserDto;
 import com.revo.authservice.domain.port.UserRepositoryPort;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
-@Repository
+import static com.revo.authservice.infrastructure.database.UserMapper.Mapper;
+
+@Component
 class UserRepositoryAdapter implements UserRepositoryPort {
 
     private final UserRepository userRepository;
@@ -18,9 +20,9 @@ class UserRepositoryAdapter implements UserRepositoryPort {
 
     @Override
     public UserDto save(UserDto userDto) {
-        UserEntity userEntity = Mapper.toEntity(userDto);
+        UserEntity userEntity = Mapper.fromDto(userDto);
         Mono<UserEntity> savedUser = userRepository.insert(userEntity);
-        return Mapper.toDomain(savedUser.block());
+        return Mapper.toDto(savedUser.block());
     }
 
     @Override
@@ -39,7 +41,7 @@ class UserRepositoryAdapter implements UserRepositoryPort {
     }
 
     private UserDto getDomain(String username) {
-        return Mapper.toDomain(getFromBase(username));
+        return Mapper.toDto(getFromBase(username));
     }
 
     private UserEntity getFromBase(String username) {

@@ -2,4 +2,4 @@ spring:
   security:
     jwt:
       secret: secret
-      expirationTIme: 3600000
+      expirationTime: 3600000
