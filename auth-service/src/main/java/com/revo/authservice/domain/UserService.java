@@ -20,13 +20,14 @@ class UserService implements UserServicePort {
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        if(existsByEmail(userDto.email())){
-            throw new EmailInUseException(userDto.email());
+        User user = Mapper.fromDto(userDto);
+        if(existsByEmail(user.getEmail())){
+            throw new EmailInUseException(user.getEmail());
         }
-        if(existsByUsername(userDto.username())){
-            throw new UsernameInUseException(userDto.username());
+        if(existsByUsername(user.getUsername())){
+            throw new UsernameInUseException(user.getUsername());
         }
-        return save(userDto);
+        return save(Mapper.toDto(user));
     }
 
     private boolean existsByUsername(String username) {
