@@ -34,7 +34,15 @@ class UserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
-    public Optional<UserDto> getUserByUsername(String subject) {
-        return userRepository.findByUsername(subject);
+    public Optional<UserDto> getUserByUsername(String username) {
+        return Optional.of(getDomain(username));
+    }
+
+    private UserDto getDomain(String username) {
+        return Mapper.toDomain(getFromBase(username));
+    }
+
+    private UserEntity getFromBase(String username) {
+        return userRepository.findByUsername(username).block();
     }
 }
