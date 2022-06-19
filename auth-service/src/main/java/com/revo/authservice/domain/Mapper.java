@@ -7,6 +7,7 @@ class Mapper {
 
     static User fromDto(UserDto userDto){
         return User.Builder.anUser()
+                .id(userDto.id())
                 .username(userDto.username())
                 .password(userDto.password())
                 .email(userDto.email())
@@ -14,6 +15,6 @@ class Mapper {
     }
 
     static UserDto toDto(User user){
-        return new UserDto(user.getUsername(), user.getPassword(), user.getEmail());
+        return new UserDto(user.getId(), user.getUsername(), user.getPassword(), user.getEmail());
     }
 }
