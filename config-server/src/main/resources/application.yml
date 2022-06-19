@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    active:
+      - vault
+server:
+  port: 8888
