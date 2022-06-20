@@ -8,5 +8,5 @@ spring:
       token: roottoken
   data:
     mongodb:
-      host: localhost
-      port: 27018
+      uri: mongodb+srv://test:test@cluster0.i97k8.mongodb.net/?retryWrites=true&w=majority
+      database: Cluster0

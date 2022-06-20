@@ -10,6 +10,7 @@ import com.revo.authservice.domain.port.UserRepositoryPort;
 import com.revo.authservice.domain.port.UserServicePort;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.revo.authservice.domain.Mapper.fromDto;
 import static com.revo.authservice.domain.Mapper.toDto;
@@ -52,11 +53,12 @@ public class UserService implements UserServicePort {
     public UserDto getUserFromToken(String token) {
         String subject = getSubject(token);
         return getUser(subject);
+
     }
 
     private UserDto getUser(String subject) {
         return userRepositoryPort.getUserByUsername(subject)
-                .orElseThrow(() ->  new UserNotFoundException(subject));
+                .orElseThrow(() -> new UserNotFoundException(subject));
     }
 
     private String getSubject(String token) {
@@ -69,23 +71,22 @@ public class UserService implements UserServicePort {
     }
 
     @Override
-    public UserDto loginUser(String login, String password) {
-        UserDto userDto = getUserByUsername(login);
-        User user = fromDto(userDto);
-        if(passwordNotMatch(user.getPassword(), password)){
+    public void loginUser(String login, String password) {
+        try{
+            UserDto userDto = getUser(login);
+            User user = fromDto(userDto);
+            if(passwordNotMatch(user.getPassword(), password)){
+                throw new BadLoginException();
+            }
+        }catch (UserNotFoundException exception){
             throw new BadLoginException();
         }
-        return toDto(user);
     }
 
     private boolean passwordNotMatch(String password, String password1) {
         return Objects.equals(password, password1);
     }
 
-    private UserDto getUserByUsername(String login) {
-        return userRepositoryPort.getUserByUsername(login)
-                .orElseThrow(() -> new BadLoginException());
-    }
 
     private String createToken(String username) {
         return jwtPort.createToken(username);

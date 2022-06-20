@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 
 @Configuration
 @ComponentScan(value = "com.revo.authservice.infrastructure")
-@EnableReactiveMongoRepositories(basePackages = "com.revo.authservice.infrastructure")
+@EnableMongoRepositories(basePackages = "com.revo.authservice.infrastructure")
 @PropertySource(value = "classpath:jwt.yml", factory = YamlFactory.class)
 class BeanConfiguration {
 

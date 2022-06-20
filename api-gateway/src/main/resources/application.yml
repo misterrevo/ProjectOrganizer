@@ -1,6 +1,14 @@
 spring:
-  application:
-    name: api-gateway
   cloud:
     config:
       token: roottoken
+    gateway:
+      routes:
+        - id: authModule
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/**
+  application:
+    name: api-gateway
+server:
+  port: 8080
