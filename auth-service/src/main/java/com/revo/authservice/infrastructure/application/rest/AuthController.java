@@ -6,8 +6,10 @@ import com.revo.authservice.infrastructure.application.rest.dto.LoginDto;
 import com.revo.authservice.infrastructure.application.rest.dto.RegisterDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
@@ -38,5 +40,10 @@ class AuthController {
     @PostMapping("/register")
     ResponseEntity<UserDto> registerUser(@RequestBody RegisterDto registerDto){
         return ResponseEntity.created(URI.create(USERS_LOCATION)).body(userServicePort.createUser(Mapper.fromRegister(registerDto)));
+    }
+
+    @PostMapping("/authorize")
+    ResponseEntity<UserDto> translateTokenOnUser(@RequestHeader(AUTHORIZATION_HEADER) String token){
+        return ResponseEntity.ok(userServicePort.getUserFromToken(token));
     }
 }

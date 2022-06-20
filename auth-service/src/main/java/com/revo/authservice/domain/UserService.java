@@ -51,9 +51,12 @@ public class UserService implements UserServicePort {
 
     @Override
     public UserDto getUserFromToken(String token) {
-        String subject = getSubject(token);
-        return getUser(subject);
-
+        try {
+            String subject = getSubject(token);
+            return getUser(subject);
+        } catch (Exception exception){
+            throw new BadLoginException();
+        }
     }
 
     private UserDto getUser(String subject) {
