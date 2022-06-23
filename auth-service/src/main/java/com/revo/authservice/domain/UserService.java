@@ -30,7 +30,26 @@ public class UserService implements UserServicePort {
 
     @Override
     public Mono<UserDto> createUser(Mono<UserDto> userDto) {
-        return null;
+        userDto.flatMap(dto -> {
+            String email = dto.email();
+            if(existsInBaseByEmail(email)){
+                throw new EmailInUseException(email);
+            }
+            String username = dto.username();
+            if(existsInBaseByUsername(username)){
+                throw new UsernameInUseException(username);
+            }
+            return Mono.just(dto);
+        }).thenMany(userRepositoryPort.save(userDto));
+        return userDto;
+    }
+
+    private boolean existsInBaseByUsername(String username) {
+        return userRepositoryPort.existsByUsername(username);
+    }
+
+    private boolean existsInBaseByEmail(String email) {
+        return userRepositoryPort.existsByEmail(email);
     }
 
     @Override

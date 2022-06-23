@@ -9,10 +9,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 
 @Configuration
 @ComponentScan(value = "com.revo.authservice.infrastructure")
-@EnableMongoRepositories(basePackages = "com.revo.authservice.infrastructure")
+@EnableReactiveMongoRepositories(basePackages = "com.revo.authservice.infrastructure")
 @PropertySource(value = "classpath:jwt.yml", factory = YamlFactory.class)
 class BeanConfiguration {
 
