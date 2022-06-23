@@ -2,7 +2,7 @@ spring:
   config:
     import: optional:configserver:http://localhost:8888/
   application:
-    name: auth-service
+    name: project-service
   cloud:
     config:
       token: roottoken

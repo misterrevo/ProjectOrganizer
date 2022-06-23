@@ -19,10 +19,19 @@ class UserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
-    public UserDto save(UserDto userDto) {
-        UserEntity userEntity = Mapper.fromDto(userDto);
-        UserEntity savedUser = userRepository.save(userEntity);
-        return Mapper.toDto(savedUser);
+    public Mono<UserDto> save(Mono<UserDto> userDto) {
+        Mono<UserEntity> userEntity = userDto
+                .map(Mapper::fromDto);
+        Mono<UserEntity> savedUser = insert(userEntity);
+        return savedUser
+                .map(Mapper::toDto);
+    }
+
+    private Mono<UserEntity> insert(Mono<UserEntity> userEntity) {
+        return userEntity
+                .flatMap(
+                        entity -> userRepository.save(entity)
+                );
     }
 
     @Override
@@ -36,12 +45,12 @@ class UserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
-    public Optional<UserDto> getUserByUsername(String username) {
+    public Mono<UserDto> getUserByUsername(String username) {
         return getFromBase(username)
                 .map(Mapper::toDto);
     }
 
-    private Optional<UserEntity> getFromBase(String username) {
+    private Mono<UserEntity> getFromBase(String username) {
         return userRepository.findByUsername(username);
     }
 }

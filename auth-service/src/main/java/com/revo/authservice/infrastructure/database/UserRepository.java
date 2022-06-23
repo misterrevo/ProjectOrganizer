@@ -9,8 +9,8 @@ import reactor.core.publisher.Mono;
 import java.util.Optional;
 
 @Repository
-interface UserRepository extends MongoRepository<UserEntity, String> {
+interface UserRepository extends ReactiveMongoRepository<UserEntity, String> {
     boolean existsByEmail(String email);
     boolean existsByUsername(String username);
-    Optional<UserEntity> findByUsername(String subject);
+    Mono<UserEntity> findByUsername(String subject);
 }

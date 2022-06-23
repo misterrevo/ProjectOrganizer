@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="api-gateway" />
         <module name="config-server" />
+        <module name="project-service" />
         <module name="ProjectOrganizer" />
         <module name="registry-service" />
       </profile>
@@ -28,6 +29,7 @@
       <module name="api-gateway" options="-parameters" />
       <module name="auth-service" options="-parameters" />
       <module name="config-server" options="-parameters" />
+      <module name="project-service" options="-parameters" />
       <module name="registry-service" options="-parameters" />
     </option>
   </component>

@@ -1,11 +1,12 @@
 package com.revo.authservice.domain.port;
 
 import com.revo.authservice.domain.dto.UserDto;
+import reactor.core.publisher.Mono;
 
 public interface UserServicePort {
 
-    UserDto createUser(UserDto userDto);
-    UserDto getUserFromToken(String token);
-    String getTokenFromUsername(String username);
-    void loginUser(String login, String password);
+    Mono<UserDto> createUser(Mono<UserDto> userDto);
+    Mono<UserDto> getUserFromToken(Mono<String> token);
+    Mono<String> getTokenFromUsername(Mono<String> username);
+    Mono<UserDto> loginUser(Mono<UserDto> userDto);
 }

@@ -30,20 +30,17 @@ class AuthController {
     }
 
     @PostMapping("/login")
-    ResponseEntity<UserDto> loginUser(@RequestBody LoginDto loginDto){
-        userServicePort.loginUser(loginDto.getUsername(), loginDto.getPassword());
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(AUTHORIZATION_HEADER, AUTHORIZATION_HEADER_PREFIX + userServicePort.getTokenFromUsername(loginDto.getUsername()));
-        return ResponseEntity.ok().headers(httpHeaders).build();
+    Mono<ResponseEntity<UserDto>> loginUser(@RequestBody Mono<LoginDto> loginDto){
+        return null;
     }
 
     @PostMapping("/register")
-    ResponseEntity<UserDto> registerUser(@RequestBody RegisterDto registerDto){
-        return ResponseEntity.created(URI.create(USERS_LOCATION)).body(userServicePort.createUser(Mapper.fromRegister(registerDto)));
+    Mono<ResponseEntity<UserDto>> registerUser(@RequestBody Mono<RegisterDto> registerDto){
+        return null;
     }
 
     @PostMapping("/authorize")
-    ResponseEntity<UserDto> translateTokenOnUser(@RequestHeader(AUTHORIZATION_HEADER) String token){
-        return ResponseEntity.ok(userServicePort.getUserFromToken(token));
+    Mono<ResponseEntity<UserDto>> translateTokenOnUser(@RequestHeader(AUTHORIZATION_HEADER) String token){
+        return null;
     }
 }

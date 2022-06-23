@@ -5,10 +5,11 @@ import com.revo.authservice.domain.exception.BadLoginException;
 import com.revo.authservice.domain.exception.EmailInUseException;
 import com.revo.authservice.domain.exception.UserNotFoundException;
 import com.revo.authservice.domain.exception.UsernameInUseException;
-import com.revo.authservice.domain.port.BrokerPort;
 import com.revo.authservice.domain.port.JwtPort;
 import com.revo.authservice.domain.port.UserRepositoryPort;
 import com.revo.authservice.domain.port.UserServicePort;
+import com.revo.authservice.infrastructure.application.rest.dto.LoginDto;
+import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 
@@ -21,83 +22,29 @@ public class UserService implements UserServicePort {
 
     private final UserRepositoryPort userRepositoryPort;
     private final JwtPort jwtPort;
-    private final BrokerPort brokerPort;
 
-    public UserService(UserRepositoryPort userRepositoryPort, JwtPort jwtPort, BrokerPort brokerPort) {
+    public UserService(UserRepositoryPort userRepositoryPort, JwtPort jwtPort) {
         this.userRepositoryPort = userRepositoryPort;
         this.jwtPort = jwtPort;
-        this.brokerPort = brokerPort;
     }
 
     @Override
-    public UserDto createUser(UserDto userDto) {
-        User user = fromDto(userDto);
-        if(existsByEmail(user.getEmail())){
-            throw new EmailInUseException(user.getEmail());
-        }
-        if(existsByUsername(user.getUsername())){
-            throw new UsernameInUseException(user.getUsername());
-        }
-        UserDto savedUser = save(toDto(user));
-        brokerPort.send(USER_TOPIC, savedUser);
-        return savedUser;
-    }
-
-    private boolean existsByUsername(String username) {
-        return userRepositoryPort.existsByUsername(username);
-    }
-
-    private boolean existsByEmail(String email) {
-        return userRepositoryPort.existsByEmail(email);
-    }
-
-    private UserDto save(UserDto userDto) {
-        return userRepositoryPort.save(userDto);
+    public Mono<UserDto> createUser(Mono<UserDto> userDto) {
+        return null;
     }
 
     @Override
-    public UserDto getUserFromToken(String token) {
-        try {
-            String subject = getSubject(token);
-            return getUser(subject);
-        } catch (Exception exception){
-            throw new BadLoginException();
-        }
-    }
-
-    private UserDto getUser(String subject) {
-        return userRepositoryPort.getUserByUsername(subject)
-                .orElseThrow(() -> new UserNotFoundException(subject));
-    }
-
-    private String getSubject(String token) {
-        return jwtPort.getSubject(token);
+    public Mono<UserDto> getUserFromToken(Mono<String> token) {
+        return null;
     }
 
     @Override
-    public String getTokenFromUsername(String username) {
-        return createToken(username);
+    public Mono<String> getTokenFromUsername(Mono<String> username) {
+        return null;
     }
 
     @Override
-    public void loginUser(String login, String password) {
-        try{
-            UserDto userDto = getUser(login);
-            User user = fromDto(userDto);
-            if(passwordNotMatch(user.getPassword(), password)){
-                throw new BadLoginException();
-            }
-        }catch (UserNotFoundException exception){
-            throw new BadLoginException();
-        }
-    }
-
-    private boolean passwordNotMatch(String password, String password1) {
-        return Objects.equals(password, password1);
-    }
-
-
-    private String createToken(String username) {
-        return jwtPort.createToken(username);
+    public Mono<UserDto> loginUser(Mono<UserDto> userDto) {
+        return null;
     }
 }

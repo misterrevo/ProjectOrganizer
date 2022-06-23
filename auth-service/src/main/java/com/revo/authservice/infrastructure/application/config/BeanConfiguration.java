@@ -1,7 +1,6 @@
 package com.revo.authservice.infrastructure.application.config;
 
 import com.revo.authservice.domain.UserService;
-import com.revo.authservice.domain.port.BrokerPort;
 import com.revo.authservice.domain.port.JwtPort;
 import com.revo.authservice.domain.port.UserRepositoryPort;
 import com.revo.authservice.domain.port.UserServicePort;
@@ -18,7 +17,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 class BeanConfiguration {
 
     @Bean
-    public UserServicePort userServicePort(UserRepositoryPort userRepositoryPort, JwtPort jwtPort, BrokerPort brokerPort){
-        return new UserService(userRepositoryPort, jwtPort, brokerPort);
+    public UserServicePort userServicePort(UserRepositoryPort userRepositoryPort, JwtPort jwtPort){
+        return new UserService(userRepositoryPort, jwtPort);
     }
 }
