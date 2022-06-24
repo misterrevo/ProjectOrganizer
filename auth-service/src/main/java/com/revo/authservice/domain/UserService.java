@@ -42,7 +42,8 @@ public class UserService implements UserServicePort {
         return userRepositoryPort.existsByUsername(username)
                 .flatMap(bool -> {
                     if(bool){
-                        throw new UsernameInUseException(username.block());
+//                        throw new UsernameInUseException(username.block());
+                        return Mono.error(new UsernameInUseException(username.block()));
                     }
                     return Mono.just(bool);
                 });
@@ -52,7 +53,8 @@ public class UserService implements UserServicePort {
         return userRepositoryPort.existsByEmail(email)
                 .flatMap(bool -> {
             if(bool){
-                throw new EmailInUseException(email.block());
+//                throw new EmailInUseException(email.block());
+                return Mono.error(new EmailInUseException(email.block()));
             }
             return Mono.just(bool);
         });
