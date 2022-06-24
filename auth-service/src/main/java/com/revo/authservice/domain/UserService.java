@@ -30,26 +30,32 @@ public class UserService implements UserServicePort {
 
     @Override
     public Mono<UserDto> createUser(Mono<UserDto> userDto) {
-        userDto.flatMap(dto -> {
-            String email = dto.email();
-            if(existsInBaseByEmail(email)){
-                throw new EmailInUseException(email);
-            }
-            String username = dto.username();
-            if(existsInBaseByUsername(username)){
-                throw new UsernameInUseException(username);
-            }
-            return Mono.just(dto);
-        }).thenMany(userRepositoryPort.save(userDto));
+        userDto
+                .thenMany(existsInBaseByEmail(userDto.map(dto -> dto.email())))
+                .thenMany(existsInBaseByUsername(userDto.map(dto -> dto.username())))
+                .thenMany(userRepositoryPort.save(userDto))
+                .subscribe();
         return userDto;
     }
 
-    private boolean existsInBaseByUsername(String username) {
-        return userRepositoryPort.existsByUsername(username);
+    private Mono<Boolean> existsInBaseByUsername(Mono<String> username) {
+        return userRepositoryPort.existsByUsername(username)
+                .flatMap(bool -> {
+                    if(bool){
+                        throw new UsernameInUseException(username.block());
+                    }
+                    return Mono.just(bool);
+                });
     }
 
-    private boolean existsInBaseByEmail(String email) {
-        return userRepositoryPort.existsByEmail(email);
+    private Mono<Boolean> existsInBaseByEmail(Mono<String> email) {
+        return userRepositoryPort.existsByEmail(email)
+                .flatMap(bool -> {
+            if(bool){
+                throw new EmailInUseException(email.block());
+            }
+            return Mono.just(bool);
+        });
     }
 
     @Override

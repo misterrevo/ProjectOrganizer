@@ -5,7 +5,7 @@ import reactor.core.publisher.Mono;
 
 public interface UserRepositoryPort {
     Mono<UserDto> save(Mono<UserDto> userDto);
-    boolean existsByEmail(String email);
-    boolean existsByUsername(String username);
+    Mono<Boolean> existsByEmail(Mono<String> email);
+    Mono<Boolean> existsByUsername(Mono<String> username);
     Mono<UserDto> getUserByUsername(String subject);
 }

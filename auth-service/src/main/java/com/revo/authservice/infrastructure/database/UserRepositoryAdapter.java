@@ -5,8 +5,6 @@ import com.revo.authservice.domain.port.UserRepositoryPort;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.util.Optional;
-
 import static com.revo.authservice.infrastructure.database.UserMapper.Mapper;
 
 @Component
@@ -35,12 +33,12 @@ class UserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
-    public boolean existsByEmail(String email) {
+    public Mono<Boolean> existsByEmail(Mono<String> email) {
         return userRepository.existsByEmail(email);
     }
 
     @Override
-    public boolean existsByUsername(String username) {
+    public Mono<Boolean> existsByUsername(Mono<String> username) {
         return userRepository.existsByUsername(username);
     }
 

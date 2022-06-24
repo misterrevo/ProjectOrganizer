@@ -36,8 +36,12 @@ class AuthController {
 
     @PostMapping("/register")
     Mono<ResponseEntity<UserDto>> registerUser(@RequestBody Mono<RegisterDto> registerDto){
-        return userServicePort.createUser(registerDto.map(Mapper::fromRegister))
+        return registerDto
+                .map(Mapper::fromRegister)
+                .flatMap(target -> userServicePort.createUser(Mono.just(target)))
                 .map(dto -> ResponseEntity.created(URI.create(USERS_LOCATION)).body(dto));
+//        return userServicePort.createUser(registerDto.map(Mapper::fromRegister))
+//                .map(dto -> ResponseEntity.created(URI.create(USERS_LOCATION)).body(dto));
     }
 
     @PostMapping("/authorize")
