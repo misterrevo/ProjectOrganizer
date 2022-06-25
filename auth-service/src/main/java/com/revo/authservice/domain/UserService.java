@@ -12,9 +12,7 @@ import reactor.core.publisher.Mono;
 import java.util.Objects;
 
 public class UserService implements UserServicePort {
-
-    private static final String USER_TOPIC = "com.revo.users.topic";
-
+    
     private final UserRepositoryPort userRepositoryPort;
     private final JwtPort jwtPort;
 
