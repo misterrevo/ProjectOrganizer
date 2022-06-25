@@ -2,6 +2,7 @@ package com.revo.authservice.infrastructure.utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.revo.authservice.domain.exception.BadLoginException;
 import com.revo.authservice.domain.port.JwtPort;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ class JwtAdapter implements JwtPort {
 
     @Override
     public String createToken(String username) {
-        return JWT.create()
+        return TOKEN_PREFIX + JWT.create()
                 .withSubject(username)
                 .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime))
                 .sign(Algorithm.HMAC256(secret));
@@ -29,9 +30,13 @@ class JwtAdapter implements JwtPort {
 
     @Override
     public String getSubject(String token) {
-        return JWT.require(Algorithm.HMAC256(secret))
-                .build()
-                .verify(token.replace(TOKEN_PREFIX, TOKEN_REPLACEMENT))
-                .getSubject();
+        try{
+            return JWT.require(Algorithm.HMAC256(secret))
+                    .build()
+                    .verify(token.replace(TOKEN_PREFIX, TOKEN_REPLACEMENT))
+                    .getSubject();
+        } catch (Exception exception){
+            throw new BadLoginException();
+        }
     }
 }

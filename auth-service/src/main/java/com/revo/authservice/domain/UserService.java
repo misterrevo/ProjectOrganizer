@@ -74,10 +74,11 @@ public class UserService implements UserServicePort {
     @Override
     public Mono<UserDto> loginUser(UserDto userDto) {
         return userRepositoryPort.getUserByUsername(userDto.username())
-                .flatMap(dto -> checkCredentials(dto, userDto));
+                .flatMap(dto -> checkPassword(dto, userDto))
+                .switchIfEmpty(Mono.error(new BadLoginException()));
     }
 
-    private Mono<UserDto> checkCredentials(UserDto baseDto, UserDto requestDto) {
+    private Mono<UserDto> checkPassword(UserDto baseDto, UserDto requestDto) {
         if(passwordNotMatch(baseDto.password(), requestDto.password())){
             return Mono.error(new BadLoginException());
         }

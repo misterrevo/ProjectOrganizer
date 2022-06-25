@@ -46,9 +46,9 @@ class AuthController {
     }
 
     @PostMapping("/authorize")
-    Mono<ResponseEntity<UserDto>> translateTokenOnUser(@RequestHeader(AUTHORIZATION_HEADER) Mono<String> monoToken){
-        return monoToken
-                .flatMap(token -> userServicePort.getUserFromToken(token))
+    Mono<ResponseEntity<UserDto>> translateTokenOnUser(@RequestHeader(AUTHORIZATION_HEADER) String token){
+        return Mono.just(token)
+                .flatMap(target -> userServicePort.getUserFromToken(target))
                 .map(dto -> ResponseEntity.ok(dto));
     }
 }
