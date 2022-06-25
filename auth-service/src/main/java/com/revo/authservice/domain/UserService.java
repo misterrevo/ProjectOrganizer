@@ -22,13 +22,13 @@ public class UserService implements UserServicePort {
 
     @Override
     public Mono<UserDto> createUser(UserDto userDto) {
-        Mono<Boolean> existsByEmail = checkExistsByEmail(userDto.email());
-        Mono<Boolean> existsByUsername = checkExistsByUsername(userDto.username());
-        Mono<UserDto> save = userRepositoryPort.save(userDto);
-        existsByEmail
-                .thenMany(existsByUsername)
-                .thenMany(save);
-        return save;
+        return checkExistsByEmail(userDto.email())
+                .then(checkExistsByUsername(userDto.username()))
+                .then(save(userDto));
+    }
+
+    private Mono<UserDto> save(UserDto userDto) {
+        return userRepositoryPort.save(userDto);
     }
 
     private Mono<Boolean> checkExistsByUsername(String username) {
@@ -65,36 +65,4 @@ public class UserService implements UserServicePort {
     public Mono<UserDto> loginUser(UserDto userDto) {
         return null;
     }
-
-//    @Override
-//    public Mono<UserDto> createUser(Mono<UserDto> userDto) {
-//        userDto
-//                .thenMany(existsInBaseByEmail(userDto.map(dto -> dto.email())))
-//                .thenMany(existsInBaseByUsername(userDto.map(dto -> dto.username())))
-//                .thenMany(userRepositoryPort.save(userDto))
-//                .subscribe();
-//        return userDto;
-//    }
-//
-//    private Mono<Boolean> existsInBaseByUsername(Mono<String> username) {
-//        return userRepositoryPort.existsByUsername(username)
-//                .flatMap(bool -> {
-//                    if(bool){
-////                        throw new UsernameInUseException(username.block());
-//                        return Mono.error(new UsernameInUseException(username.block()));
-//                    }
-//                    return Mono.just(bool);
-//                });
-//    }
-//
-//    private Mono<Boolean> existsInBaseByEmail(Mono<String> email) {
-//        return userRepositoryPort.existsByEmail(email)
-//                .flatMap(bool -> {
-//            if(bool){
-////                throw new EmailInUseException(email.block());
-//                return Mono.error(new EmailInUseException(email.block()));
-//            }
-//            return Mono.just(bool);
-//        });
-//    }
 }
