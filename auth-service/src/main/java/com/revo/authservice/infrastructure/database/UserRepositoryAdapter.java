@@ -17,38 +17,60 @@ class UserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
-    public Mono<UserDto> save(Mono<UserDto> userDto) {
-        Mono<UserEntity> userEntity = userDto
-                .map(Mapper::fromDto);
-        Mono<UserEntity> savedUser = insert(userEntity);
-        return savedUser
+    public Mono<UserDto> save(UserDto userDto) {
+        return userRepository.save(Mapper.fromDto(userDto))
                 .map(Mapper::toDto);
     }
 
-    private Mono<UserEntity> insert(Mono<UserEntity> userEntity) {
-        return userEntity
-                .flatMap(
-                        entity -> userRepository.save(entity)
-                );
-    }
-
     @Override
-    public Mono<Boolean> existsByEmail(Mono<String> email) {
+    public Mono<Boolean> existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
     @Override
-    public Mono<Boolean> existsByUsername(Mono<String> username) {
+    public Mono<Boolean> existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
 
     @Override
     public Mono<UserDto> getUserByUsername(String username) {
-        return getFromBase(username)
+        return userRepository.findByUsername(username)
                 .map(Mapper::toDto);
     }
 
-    private Mono<UserEntity> getFromBase(String username) {
-        return userRepository.findByUsername(username);
-    }
+//    @Override
+//    public Mono<UserDto> save(Mono<UserDto> userDto) {
+//        Mono<UserEntity> userEntity = userDto
+//                .map(Mapper::fromDto);
+//        Mono<UserEntity> savedUser = insert(userEntity);
+//        return savedUser
+//                .map(Mapper::toDto);
+//    }
+//
+//    private Mono<UserEntity> insert(Mono<UserEntity> userEntity) {
+//        return userEntity
+//                .flatMap(
+//                        entity -> userRepository.save(entity)
+//                );
+//    }
+//
+//    @Override
+//    public Mono<Boolean> existsByEmail(Mono<String> email) {
+//        return userRepository.existsByEmail(email);
+//    }
+//
+//    @Override
+//    public Mono<Boolean> existsByUsername(Mono<String> username) {
+//        return userRepository.existsByUsername(username);
+//    }
+//
+//    @Override
+//    public Mono<UserDto> getUserByUsername(String username) {
+//        return getFromBase(username)
+//                .map(Mapper::toDto);
+//    }
+//
+//    private Mono<UserEntity> getFromBase(String username) {
+//        return userRepository.findByUsername(username);
+//    }
 }

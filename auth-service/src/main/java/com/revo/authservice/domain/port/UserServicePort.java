@@ -5,8 +5,8 @@ import reactor.core.publisher.Mono;
 
 public interface UserServicePort {
 
-    Mono<UserDto> createUser(Mono<UserDto> userDto);
-    Mono<UserDto> getUserFromToken(Mono<String> token);
-    Mono<String> getTokenFromUsername(Mono<String> username);
-    Mono<UserDto> loginUser(Mono<UserDto> userDto);
+    Mono<UserDto> createUser(UserDto userDto);
+    Mono<UserDto> getUserFromToken(String token);
+    Mono<String> getTokenFromUsername(String username);
+    Mono<UserDto> loginUser(UserDto userDto);
 }
