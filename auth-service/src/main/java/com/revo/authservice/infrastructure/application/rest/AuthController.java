@@ -31,7 +31,10 @@ class AuthController {
 
     @PostMapping("/login")
     Mono<ResponseEntity<UserDto>> loginUser(@RequestBody Mono<LoginDto> loginDto){
-        return null;
+        return loginDto
+                .map(Mapper::fromLogin)
+                .flatMap(dto -> userServicePort.loginUser(dto))
+                .map(dto -> ResponseEntity.ok().header(AUTHORIZATION_HEADER, userServicePort.getTokenFromUsername(dto.username())).body(dto));
     }
 
     @PostMapping("/register")
@@ -43,7 +46,9 @@ class AuthController {
     }
 
     @PostMapping("/authorize")
-    Mono<ResponseEntity<UserDto>> translateTokenOnUser(@RequestHeader(AUTHORIZATION_HEADER) String token){
-        return null;
+    Mono<ResponseEntity<UserDto>> translateTokenOnUser(@RequestHeader(AUTHORIZATION_HEADER) Mono<String> monoToken){
+        return monoToken
+                .flatMap(token -> userServicePort.getUserFromToken(token))
+                .map(dto -> ResponseEntity.ok(dto));
     }
 }

@@ -7,6 +7,6 @@ public interface UserServicePort {
 
     Mono<UserDto> createUser(UserDto userDto);
     Mono<UserDto> getUserFromToken(String token);
-    Mono<String> getTokenFromUsername(String username);
+    String getTokenFromUsername(String username);
     Mono<UserDto> loginUser(UserDto userDto);
 }

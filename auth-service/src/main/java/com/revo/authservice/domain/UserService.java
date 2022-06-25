@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 import java.util.Objects;
 
 public class UserService implements UserServicePort {
-    
+
     private final UserRepositoryPort userRepositoryPort;
     private final JwtPort jwtPort;
 
@@ -63,9 +63,8 @@ public class UserService implements UserServicePort {
     }
 
     @Override
-    public Mono<String> getTokenFromUsername(String username) {
-        return Mono
-                .just(createToken(username));
+    public String getTokenFromUsername(String username) {
+        return createToken(username);
     }
 
     private String createToken(String username) {
