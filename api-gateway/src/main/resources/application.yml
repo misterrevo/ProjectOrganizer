@@ -11,7 +11,7 @@ spring:
         - id: projectModule
           uri: lb://PROJECT-SERVICE
           predicates:
-            - Path=/test/**
+            - Path=/projects/**, /tasks/**
   application:
     name: api-gateway
 server:

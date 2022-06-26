@@ -33,8 +33,7 @@ public class Service implements ProjectServicePort, TaskServicePort {
     public Flux<ProjectDto> getAllProjects(String token) {
         return getUser(token)
                 .bodyToFlux(UserVO.class)
-                .flatMap(user -> projectRepositoryPort.getAllProjects(user.getUsername()))
-                .switchIfEmpty(Flux.error(new NoPermissionException()));
+                .flatMap(user -> projectRepositoryPort.getAllProjects(user.getUsername()));
     }
 
     private WebClient.ResponseSpec getUser(String token) {
@@ -57,7 +56,11 @@ public class Service implements ProjectServicePort, TaskServicePort {
     public Mono<ProjectDto> createProject(String token, RestProjectDto projectDto) {
         return getUser(token)
                 .bodyToMono(UserVO.class)
-                .flatMap(user -> projectRepositoryPort.save(Mapper.fromRest(projectDto)));
+                .flatMap(user -> {
+                    ProjectDto dto = Mapper.fromRest(projectDto);
+                    dto.setOwner(user.getUsername());
+                    return projectRepositoryPort.save(dto);
+                });
     }
 
     @Override
