@@ -7,8 +7,8 @@ import reactor.core.publisher.Mono;
 public interface ProjectRepositoryPort {
 
     Flux<ProjectDto> getAllProjects(String owner);
-    Mono<ProjectDto> getProject(String id);
+    Mono<ProjectDto> getProject(String id, String owner);
     Mono<ProjectDto> save(ProjectDto projectDto);
-    Mono<ProjectDto> delete(String id);
+    Mono<ProjectDto> delete(String id, String owner);
     Mono<ProjectDto> editProject(String id, ProjectDto projectDto);
 }

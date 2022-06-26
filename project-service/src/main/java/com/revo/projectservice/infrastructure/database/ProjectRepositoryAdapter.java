@@ -24,8 +24,8 @@ class ProjectRepositoryAdapter implements ProjectRepositoryPort {
     }
 
     @Override
-    public Mono<ProjectDto> getProject(String id) {
-        return projectRepository.findById(id)
+    public Mono<ProjectDto> getProject(String id, String owner) {
+        return projectRepository.getByOwnerAndId(owner, id)
                 .map(Mapper::toDto);
     }
 
@@ -36,9 +36,9 @@ class ProjectRepositoryAdapter implements ProjectRepositoryPort {
     }
 
     @Override
-    public Mono<ProjectDto> delete(String id) {
+    public Mono<ProjectDto> delete(String id, String owner) {
         return projectRepository.deleteById(id)
-                .then(getProject(id));
+                .then(getProject(id, owner));
     }
 
     @Override
