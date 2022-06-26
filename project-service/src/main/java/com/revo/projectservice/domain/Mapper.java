@@ -10,6 +10,8 @@ class Mapper {
 
     static Project fromDto(ProjectDto projectDto){
         return Project.Builder.aProject()
+                .id(projectDto.getId())
+                .owner(projectDto.getOwner())
                 .name(projectDto.getName())
                 .startDate(projectDto.getStartDate())
                 .endDate(projectDto.getEndDate())
@@ -25,6 +27,7 @@ class Mapper {
 
     static Task fromDto(TaskDto taskDto) {
         return Task.Builder.aTask()
+                .id(taskDto.getId())
                 .name(taskDto.getName())
                 .description(taskDto.getDescription())
                 .startDate(taskDto.getStartDate())
@@ -34,6 +37,8 @@ class Mapper {
 
     static ProjectDto toDto(Project project){
         return ProjectDto.Builder.aProjectDto()
+                .id(project.getId())
+                .owner(project.getOwner())
                 .name(project.getName())
                 .startDate(project.getStartDate())
                 .endDate(project.getEndDate())
@@ -49,6 +54,7 @@ class Mapper {
 
     static TaskDto toDto(Task task) {
         return TaskDto.Builder.aTaskDto()
+                .id(task.getId())
                 .name(task.getName())
                 .description(task.getDescription())
                 .startDate(task.getStartDate())

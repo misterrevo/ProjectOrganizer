@@ -4,16 +4,26 @@ import java.time.LocalDateTime;
 
 public class TaskDto {
 
+    private String id;
     private String name;
     private String description;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    public TaskDto(String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
+    public TaskDto(String id, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -49,6 +59,7 @@ public class TaskDto {
     }
 
     public static final class Builder {
+        private String id;
         private String name;
         private String description;
         private LocalDateTime startDate;
@@ -59,6 +70,11 @@ public class TaskDto {
 
         public static Builder aTaskDto() {
             return new Builder();
+        }
+
+        public Builder id(String id){
+            this.id = id;
+            return this;
         }
 
         public Builder name(String name) {
@@ -82,7 +98,7 @@ public class TaskDto {
         }
 
         public TaskDto build() {
-            return new TaskDto(name, description, startDate, endDate);
+            return new TaskDto(id, name, description, startDate, endDate);
         }
     }
 }

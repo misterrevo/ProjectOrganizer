@@ -10,11 +10,20 @@ class Task {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    public Task(String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
+    public Task(String id, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -50,6 +59,7 @@ class Task {
     }
 
     public static final class Builder {
+        private String id;
         private String name;
         private String description;
         private LocalDateTime startDate;
@@ -64,6 +74,11 @@ class Task {
 
         public Builder name(String name) {
             this.name = name;
+            return this;
+        }
+
+        public Builder id(String id){
+            this.id = id;
             return this;
         }
 
@@ -83,7 +98,7 @@ class Task {
         }
 
         public Task build() {
-            return new Task(name, description, startDate, endDate);
+            return new Task(id, name, description, startDate, endDate);
         }
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication
 @EnableEurekaClient
-@PropertySource("classpath:jwt.yml")
 public class AuthServiceApplication {
 
     public static void main(String[] args) {

@@ -1,11 +1,17 @@
-package com.revo.projectservice.domain.dto;
+package com.revo.projectservice.infrastructure.database;
+
+import com.revo.projectservice.domain.dto.TaskDto;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectDto {
+@Document
+class ProjectEntity {
 
+    @Id
     private String id;
     private String owner;
     private String name;
@@ -13,7 +19,7 @@ public class ProjectDto {
     private LocalDateTime endDate;
     private List<TaskDto> tasks;
 
-    public ProjectDto(String id, String owner, String name, LocalDateTime startDate, LocalDateTime endDate, List<TaskDto> tasks) {
+    public ProjectEntity(String id, String owner, String name, LocalDateTime startDate, LocalDateTime endDate, List<TaskDto> tasks) {
         this.id = id;
         this.owner = owner;
         this.name = name;
@@ -81,16 +87,16 @@ public class ProjectDto {
         private Builder() {
         }
 
-        public static Builder aProjectDto() {
+        public static Builder aProjectEntity() {
             return new Builder();
         }
 
-        public Builder id(String id){
+        public Builder id(String id) {
             this.id = id;
             return this;
         }
 
-        public Builder owner(String owner){
+        public Builder owner(String owner) {
             this.owner = owner;
             return this;
         }
@@ -115,8 +121,8 @@ public class ProjectDto {
             return this;
         }
 
-        public ProjectDto build() {
-            return new ProjectDto(id, owner, name, startDate, endDate, tasks);
+        public ProjectEntity build() {
+            return new ProjectEntity(id, owner, name, startDate, endDate, tasks);
         }
     }
 }
