@@ -7,7 +7,7 @@ spring:
         - id: authModule
           uri: lb://AUTH-SERVICE
           predicates:
-            - Path=/login/**, /register/**, /authorize/**
+            - Path=/login, /register, /authorize
         - id: projectModule
           uri: lb://PROJECT-SERVICE
           predicates:
