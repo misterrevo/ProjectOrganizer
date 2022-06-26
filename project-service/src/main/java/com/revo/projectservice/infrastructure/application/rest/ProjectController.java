@@ -13,9 +13,4 @@ class ProjectController {
     ProjectController(ProjectServicePort projectServicePort) {
         this.projectServicePort = projectServicePort;
     }
-
-    @GetMapping("/test/{token}")
-    void test(@PathVariable("token") String token){
-        projectServicePort.getAllProjects(token);
-    }
 }

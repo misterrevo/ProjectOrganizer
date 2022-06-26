@@ -28,7 +28,6 @@ public class ProjectService implements ProjectServicePort {
     @Override
     public Flux<ProjectDto> getAllProjects(String token) {
         Mono<UserVO> userVOMono = getUser(token);
-        userVOMono.subscribe(System.out::println);
         return null;
     }
 
