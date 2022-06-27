@@ -6,6 +6,7 @@ spring:
   cloud:
     config:
       token: roottoken
-  mongodb:
-    embedded:
-      version: 4.0.21
+  data:
+    mongodb:
+      uri: mongodb+srv://test:test@cluster0.i97k8.mongodb.net/?retryWrites=true&w=majority
+      database: TestProjectOrganizer

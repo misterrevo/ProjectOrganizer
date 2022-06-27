@@ -1,23 +1,20 @@
 package com.revo.projectservice.infrastructure.application.rest;
 
+import com.revo.projectservice.infrastructure.application.ProjectServiceApplication;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.test.web.servlet.MockMvc;
 
-import java.net.URI;
-
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DataMongoTest
-@ExtendWith(SpringExtension.class)
+@WebFluxTest(controllers = ProjectController.class)
+@ContextConfiguration(classes = ProjectServiceApplication.class)
 class ProjectControllerTest {
 
-    private static final String GET_ALL_END_POINT = "/projects";
+    private static final String PROJECTS_ENDPOINT = "/projects";
 
     @Autowired
     private WebTestClient webTestClient;
@@ -27,8 +24,9 @@ class ProjectControllerTest {
         //given
         //when
         //then
-        webTestClient.get()
-                .uri(GET_ALL_END_POINT)
+        webTestClient
+                .get()
+                .uri(PROJECTS_ENDPOINT)
                 .exchange()
                 .expectStatus().isOk();
     }
