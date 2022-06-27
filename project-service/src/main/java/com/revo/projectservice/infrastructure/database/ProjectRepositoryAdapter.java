@@ -9,6 +9,7 @@ import reactor.core.publisher.Mono;
 import static com.revo.projectservice.infrastructure.database.EntityMapper.Mapper;
 
 @Component
+public
 class ProjectRepositoryAdapter implements ProjectRepositoryPort {
 
     private final ProjectRepository projectRepository;
