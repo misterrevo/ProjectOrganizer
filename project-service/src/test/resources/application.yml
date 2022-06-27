@@ -1,0 +1,11 @@
+spring:
+  config:
+    import: optional:configserver:http://localhost:8888/
+  application:
+    name: project-service
+  cloud:
+    config:
+      token: roottoken
+  mongodb:
+    embedded:
+      version: 4.0.21

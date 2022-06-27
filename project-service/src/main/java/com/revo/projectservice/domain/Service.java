@@ -7,6 +7,7 @@ import com.revo.projectservice.domain.dto.TaskDto;
 import com.revo.projectservice.domain.exception.NoPermissionException;
 import com.revo.projectservice.domain.exception.NoTaskFoundException;
 import com.revo.projectservice.domain.exception.ProjectNotFoundException;
+import com.revo.projectservice.domain.exception.TaskDateOutOfRangeInProject;
 import com.revo.projectservice.domain.port.ProjectRepositoryPort;
 import com.revo.projectservice.domain.port.ProjectServicePort;
 import com.revo.projectservice.domain.port.TaskServicePort;
@@ -88,10 +89,14 @@ public class Service implements ProjectServicePort, TaskServicePort {
                 .flatMap(user -> {
                     Mono<ProjectDto> dto = projectRepositoryPort.getProject(projectId, user.getUsername());
                     return dto.flatMap(target -> {
+                        if(target.getEndDate().isBefore(taskDto.getEndDate()) || target.getStartDate().isAfter(taskDto.getStartDate())){
+                            return Mono.error(new TaskDateOutOfRangeInProject());
+                        }
                         TaskDto task = Mapper.fromRest(taskDto);
                         task.setId(generateId());
                         target.getTasks().add(task);
-                        projectRepositoryPort.save(target);
+                        projectRepositoryPort.save(target)
+                                .subscribe();
                         return Mono.just(task);
                     });
                 });
@@ -107,10 +112,14 @@ public class Service implements ProjectServicePort, TaskServicePort {
                 .bodyToMono(UserVO.class)
                 .flatMap(user -> {
                     return Mono.from(projectRepositoryPort.getAllProjects(user.getUsername()).flatMap(project -> {
+                        if(project.getEndDate().isBefore(taskDto.getEndDate()) || project.getStartDate().isAfter(taskDto.getStartDate())){
+                            return Mono.error(new TaskDateOutOfRangeInProject());
+                        }
                         for (TaskDto task : project.getTasks()) {
                             if (Objects.equals(task.getId(), id)) {
                                 updateTask(task, taskDto);
-                                projectRepositoryPort.save(project);
+                                projectRepositoryPort.save(project)
+                                        .subscribe();
                                 return Mono.just(task);
                             }
                         }
