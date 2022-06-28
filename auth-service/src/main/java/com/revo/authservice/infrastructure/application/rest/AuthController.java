@@ -19,7 +19,6 @@ import static com.revo.authservice.infrastructure.application.rest.DtoMapper.Map
 class AuthController {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String AUTHORIZATION_HEADER_PREFIX = "Bearer ";
     private static final String USERS_LOCATION = "None";
     private final UserService userService;
 

@@ -64,7 +64,7 @@ class Mapper {
                 .build();
     }
 
-    public static ProjectDto mapProjectFromRestDto(RequestProjectDto projectDto) {
+    public static ProjectDto mapProjectDtoFromRestDto(RequestProjectDto projectDto) {
         return ProjectDto.Builder.aProjectDto()
                 .name(projectDto.getName())
                 .startDate(projectDto.getStartDate())
@@ -72,7 +72,7 @@ class Mapper {
                 .build();
     }
 
-    public static TaskDto mapTaskFromRestDto(RequestTaskDto taskDto) {
+    public static TaskDto mapTaskDtoFromRestDto(RequestTaskDto taskDto) {
         return TaskDto.Builder.aTaskDto()
                 .name(taskDto.getName())
                 .description(taskDto.getDescription())

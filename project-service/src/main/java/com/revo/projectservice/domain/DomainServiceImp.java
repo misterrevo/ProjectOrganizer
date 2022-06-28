@@ -60,7 +60,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
         return getUserFromAuthServiceAsResponse(token)
                 .bodyToMono(UserVO.class)
                 .flatMap(user -> {
-                    ProjectDto projectDto = Mapper.mapProjectFromRestDto(requestProjectDto);
+                    ProjectDto projectDto = Mapper.mapProjectDtoFromRestDto(requestProjectDto);
                     projectDto.setOwner(user.getUsername());
                     return projectRepositoryPort.saveProject(projectDto);
                 });
@@ -78,7 +78,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
         return getUserFromAuthServiceAsResponse(token)
                 .bodyToMono(UserVO.class)
                 .flatMap(user -> {
-                    ProjectDto projectDto = Mapper.mapProjectFromRestDto(requestProjectDto);
+                    ProjectDto projectDto = Mapper.mapProjectDtoFromRestDto(requestProjectDto);
                     projectDto.setId(id);
                     return projectRepositoryPort.saveProject(projectDto);
                 });
@@ -93,7 +93,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
                         if(projectDto.getEndDate().isBefore(requestTaskDto.getEndDate()) || projectDto.getStartDate().isAfter(requestTaskDto.getStartDate())){
                             return Mono.error(new TaskDateOutOfRangeInProject());
                         }
-                        TaskDto taskDto = Mapper.mapTaskFromRestDto(requestTaskDto);
+                        TaskDto taskDto = Mapper.mapTaskDtoFromRestDto(requestTaskDto);
                         taskDto.setId(generateId());
                         projectDto.getTasks().add(taskDto);
                         projectRepositoryPort.saveProject(projectDto)
