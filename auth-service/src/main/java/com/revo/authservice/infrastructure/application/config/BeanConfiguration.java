@@ -22,4 +22,9 @@ class BeanConfiguration {
     public UserService createUserServiceBean(UserRepository userRepository, Jwt jwt, Encoder encoder){
         return new UserServiceImp(userRepository, jwt, encoder);
     }
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 }

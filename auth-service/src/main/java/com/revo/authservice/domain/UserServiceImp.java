@@ -26,7 +26,7 @@ public class UserServiceImp implements com.revo.authservice.domain.port.UserServ
         return checkUserExistsByEmail(userDto.email())
                 .then(checkUserExistsByUsername(userDto.username()))
                 .then(encodePassword(userDto))
-                .then(saveUser(userDto));
+                .flatMap(targetUserDto -> saveUser(targetUserDto));
     }
 
     private Mono<UserDto> encodePassword(UserDto userDto) {
@@ -35,13 +35,16 @@ public class UserServiceImp implements com.revo.authservice.domain.port.UserServ
     }
 
     private Mono<UserDto> saveUser(UserDto userDto) {
+        System.out.println("Error with saving" );
         return userRepository.saveUser(userDto);
     }
 
     private Mono<Boolean> checkUserExistsByUsername(String username) {
         return userRepository.userExistsByUsername(username)
                 .flatMap(existsByUsernameBoolean -> {
+                    System.out.println("Checking condition");
                     if(existsByUsernameBoolean){
+                        System.out.println("Error with username");
                         return Mono.error(new UsernameInUseException(username));
                     }
                     return Mono.just(existsByUsernameBoolean);
@@ -49,9 +52,12 @@ public class UserServiceImp implements com.revo.authservice.domain.port.UserServ
     }
 
     private Mono<Boolean> checkUserExistsByEmail(String email) {
+        System.out.println("Start checking user exist by email");
         return userRepository.userExistsByEmail(email)
                 .flatMap(existsByEmailBoolean -> {
+                    System.out.println("Checking condition");
                     if(existsByEmailBoolean){
+                        System.out.println("Error with email");
                         return Mono.error(new EmailInUseException(email));
                     }
                     return Mono.just(existsByEmailBoolean);

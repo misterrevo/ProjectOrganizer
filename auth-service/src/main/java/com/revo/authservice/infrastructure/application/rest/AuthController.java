@@ -28,17 +28,25 @@ class AuthController {
 
     @PostMapping("/login")
     Mono<ResponseEntity<UserDto>> loginUser(@RequestBody Mono<LoginDto> loginDto){
+        System.out.println("In serviec");
         return loginDto
                 .map(Mapper::fromLogin)
-                .flatMap(userDto -> userService.loginUser(userDto))
+                .flatMap(userDto -> {
+                    System.out.println("In flatmap");
+                    return userService.loginUser(userDto);
+                })
                 .map(userDto -> ResponseEntity.ok().header(AUTHORIZATION_HEADER, userService.getTokenFromUsername(userDto.username())).body(userDto));
     }
 
     @PostMapping("/register")
     Mono<ResponseEntity<UserDto>> registerUser(@RequestBody Mono<RegisterDto> registerDto){
+        System.out.println("In register controller");
         return registerDto
                 .map(Mapper::fromRegister)
-                .flatMap(userDto -> userService.createUser(userDto))
+                .flatMap(userDto -> {
+                    System.out.println("Try creating user");
+                    return userService.createUser(userDto);
+                })
                 .map(userDto -> ResponseEntity.created(URI.create(USERS_LOCATION)).body(userDto));
     }
 
