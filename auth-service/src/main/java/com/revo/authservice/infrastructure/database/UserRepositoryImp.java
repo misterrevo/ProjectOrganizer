@@ -8,11 +8,11 @@ import reactor.core.publisher.Mono;
 import static com.revo.authservice.infrastructure.database.UserMapper.Mapper;
 
 @Component
-class UserRepositoryAdapter implements UserRepository {
+class UserRepositoryImp implements UserRepository {
 
     private final com.revo.authservice.infrastructure.database.UserRepository userRepository;
 
-    UserRepositoryAdapter(com.revo.authservice.infrastructure.database.UserRepository userRepository) {
+    UserRepositoryImp(com.revo.authservice.infrastructure.database.UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

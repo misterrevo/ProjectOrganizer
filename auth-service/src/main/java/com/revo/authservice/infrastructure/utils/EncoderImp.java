@@ -5,11 +5,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-class EncoderAdapter implements Encoder {
+class EncoderImp implements Encoder {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    EncoderAdapter(BCryptPasswordEncoder bCryptPasswordEncoder) {
+    EncoderImp(BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 

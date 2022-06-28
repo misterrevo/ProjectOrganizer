@@ -9,11 +9,11 @@ import reactor.core.publisher.Mono;
 import static com.revo.projectservice.infrastructure.database.EntityMapper.Mapper;
 
 @Component
-class ProjectRepositoryAdapter implements ProjectRepository {
+class ProjectRepositoryImp implements ProjectRepository {
 
     private final com.revo.projectservice.infrastructure.database.ProjectRepository projectRepository;
 
-    ProjectRepositoryAdapter(com.revo.projectservice.infrastructure.database.ProjectRepository projectRepository) {
+    ProjectRepositoryImp(com.revo.projectservice.infrastructure.database.ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
     }
 

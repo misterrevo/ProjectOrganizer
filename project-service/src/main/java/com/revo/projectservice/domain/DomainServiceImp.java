@@ -20,14 +20,14 @@ import reactor.core.publisher.Mono;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Service implements ProjectService, TaskService {
+public class DomainServiceImp implements ProjectService, TaskService {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String GATEWAY_HOST = "http://localhost:8080";
     private final ProjectRepository projectRepositoryPort;
     private static final String TRANSLATE_TOKEN_PATH = "/authorize";
 
-    public Service(ProjectRepository projectRepositoryPort) {
+    public DomainServiceImp(ProjectRepository projectRepositoryPort) {
         this.projectRepositoryPort = projectRepositoryPort;
     }
 

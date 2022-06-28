@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
-class JwtAdapter implements Jwt {
+class JwtImp implements Jwt {
 
     private static final String TOKEN_PREFIX = "Bearer ";
     private static final String TOKEN_REPLACEMENT = "";
