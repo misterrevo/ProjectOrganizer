@@ -1,6 +1,6 @@
 package com.revo.projectservice.infrastructure.application.rest;
 
-import com.revo.projectservice.domain.dto.RestTaskDto;
+import com.revo.projectservice.domain.dto.RequestTaskDto;
 import com.revo.projectservice.domain.dto.TaskDto;
 import com.revo.projectservice.domain.port.TaskService;
 import org.springframework.http.ResponseEntity;
@@ -32,22 +32,22 @@ class TaskController {
     }
 
     @PostMapping("/{projectId}")
-    Mono<ResponseEntity<TaskDto>> createTaskByTokenAndProjectId(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(PROJECT_ID_PATH_VARIABLE) String projectId, @RequestBody Mono<RestTaskDto> restTaskDtoMono){
+    Mono<ResponseEntity<TaskDto>> createTaskByTokenAndProjectId(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(PROJECT_ID_PATH_VARIABLE) String projectId, @RequestBody Mono<RequestTaskDto> restTaskDtoMono){
         return restTaskDtoMono
-                .flatMap(dto -> taskService.createTaskByTokenAndProjectId(token, projectId, dto))
-                .map(task -> ResponseEntity.created(URI.create(TASKS_LOCATION)).body(task));
+                .flatMap(requestTaskDto -> taskService.createTaskByTokenAndProjectId(token, projectId, requestTaskDto))
+                .map(taskDto -> ResponseEntity.created(URI.create(TASKS_LOCATION)).body(taskDto));
     }
 
     @PatchMapping("/{id}")
-    Mono<ResponseEntity<TaskDto>> editTaskByTokenAndId(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id, @RequestBody Mono<RestTaskDto> restTaskDtoMono){
+    Mono<ResponseEntity<TaskDto>> editTaskByTokenAndId(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id, @RequestBody Mono<RequestTaskDto> restTaskDtoMono){
         return restTaskDtoMono
-                .flatMap(dto -> taskService.editTaskByTokenAndId(token, id, dto))
-                .map(task -> ResponseEntity.ok(task));
+                .flatMap(requestTaskDto -> taskService.editTaskByTokenAndId(token, id, requestTaskDto))
+                .map(taskDto -> ResponseEntity.ok(taskDto));
     }
 
     @DeleteMapping("/{id}")
     Mono<ResponseEntity<TaskDto>> deleteTaskByTokenAndId(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id){
         return taskService.deleteTaskByTokenAndId(token, id)
-                .map(task -> ResponseEntity.ok(task));
+                .map(taskDto -> ResponseEntity.ok(taskDto));
     }
 }

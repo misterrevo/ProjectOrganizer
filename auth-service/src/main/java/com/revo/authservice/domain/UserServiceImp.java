@@ -31,7 +31,7 @@ public class UserServiceImp implements com.revo.authservice.domain.port.UserServ
 
     private Mono<UserDto> encodePassword(UserDto userDto) {
         return Mono.just(userDto)
-                .map(dto -> new UserDto(userDto.id(), userDto.username(), encoder.encodePassword(userDto.password()), userDto.email()));
+                .map(targetUserDto -> new UserDto(userDto.id(), userDto.username(), encoder.encodePassword(userDto.password()), userDto.email()));
     }
 
     private Mono<UserDto> saveUser(UserDto userDto) {
@@ -40,21 +40,21 @@ public class UserServiceImp implements com.revo.authservice.domain.port.UserServ
 
     private Mono<Boolean> checkUserExistsByUsername(String username) {
         return userRepository.userExistsByUsername(username)
-                .flatMap(bool -> {
-                    if(bool){
+                .flatMap(existsByUsernameBoolean -> {
+                    if(existsByUsernameBoolean){
                         return Mono.error(new UsernameInUseException(username));
                     }
-                    return Mono.just(bool);
+                    return Mono.just(existsByUsernameBoolean);
                 });
     }
 
     private Mono<Boolean> checkUserExistsByEmail(String email) {
         return userRepository.userExistsByEmail(email)
-                .flatMap(bool -> {
-                    if(bool){
+                .flatMap(existsByEmailBoolean -> {
+                    if(existsByEmailBoolean){
                         return Mono.error(new EmailInUseException(email));
                     }
-                    return Mono.just(bool);
+                    return Mono.just(existsByEmailBoolean);
                 });
     }
 
@@ -80,7 +80,7 @@ public class UserServiceImp implements com.revo.authservice.domain.port.UserServ
     @Override
     public Mono<UserDto> loginUser(UserDto userDto) {
         return userRepository.getUserByUsername(userDto.username())
-                .flatMap(dto -> checkPasswordMatches(dto, userDto))
+                .flatMap(targetUserDto -> checkPasswordMatches(targetUserDto, userDto))
                 .switchIfEmpty(Mono.error(new BadLoginException()));
     }
 

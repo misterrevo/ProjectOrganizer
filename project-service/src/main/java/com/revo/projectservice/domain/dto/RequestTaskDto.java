@@ -2,14 +2,14 @@ package com.revo.projectservice.domain.dto;
 
 import java.time.LocalDateTime;
 
-public class RestTaskDto {
+public class RequestTaskDto {
 
     private String name;
     private String description;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    public RestTaskDto(String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
+    public RequestTaskDto(String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.name = name;
         this.description = description;
         this.startDate = startDate;

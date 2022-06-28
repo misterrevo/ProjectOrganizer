@@ -31,22 +31,22 @@ class AuthController {
     Mono<ResponseEntity<UserDto>> loginUser(@RequestBody Mono<LoginDto> loginDto){
         return loginDto
                 .map(Mapper::fromLogin)
-                .flatMap(dto -> userService.loginUser(dto))
-                .map(dto -> ResponseEntity.ok().header(AUTHORIZATION_HEADER, userService.getTokenFromUsername(dto.username())).body(dto));
+                .flatMap(userDto -> userService.loginUser(userDto))
+                .map(userDto -> ResponseEntity.ok().header(AUTHORIZATION_HEADER, userService.getTokenFromUsername(userDto.username())).body(userDto));
     }
 
     @PostMapping("/register")
     Mono<ResponseEntity<UserDto>> registerUser(@RequestBody Mono<RegisterDto> registerDto){
         return registerDto
                 .map(Mapper::fromRegister)
-                .flatMap(dto -> userService.createUser(dto))
-                .map(dto -> ResponseEntity.created(URI.create(USERS_LOCATION)).body(dto));
+                .flatMap(userDto -> userService.createUser(userDto))
+                .map(userDto -> ResponseEntity.created(URI.create(USERS_LOCATION)).body(userDto));
     }
 
     @PostMapping("/authorize")
     Mono<ResponseEntity<UserDto>> translateTokenOnUser(@RequestHeader(AUTHORIZATION_HEADER) String token){
         return Mono.just(token)
-                .flatMap(target -> userService.getUserFromToken(target))
-                .map(dto -> ResponseEntity.ok(dto));
+                .flatMap(targetToken -> userService.getUserFromToken(targetToken))
+                .map(userDto -> ResponseEntity.ok(userDto));
     }
 }

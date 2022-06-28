@@ -1,6 +1,6 @@
 package com.revo.projectservice.infrastructure.application.rest;
 
-import com.revo.projectservice.domain.dto.RestTaskDto;
+import com.revo.projectservice.domain.dto.RequestTaskDto;
 import com.revo.projectservice.domain.dto.TaskDto;
 import com.revo.projectservice.domain.exception.NoPermissionException;
 import com.revo.projectservice.domain.exception.TaskDateOutOfRangeInProject;
@@ -47,7 +47,7 @@ class TaskControllerTest {
     void shouldReturn201WhileCreatingTask() {
         //given
         //when
-        when(taskService.createTaskByTokenAndProjectId(anyString(), anyString(), any(RestTaskDto.class))).thenReturn(Mono.just(taskDto));
+        when(taskService.createTaskByTokenAndProjectId(anyString(), anyString(), any(RequestTaskDto.class))).thenReturn(Mono.just(taskDto));
         //then
         webTestClient
                 .post()
@@ -62,7 +62,7 @@ class TaskControllerTest {
     void shouldReturn400WhileCreatingTask(){
         //given
         //when
-        when(taskService.createTaskByTokenAndProjectId(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new TaskDateOutOfRangeInProject()));
+        when(taskService.createTaskByTokenAndProjectId(anyString(),anyString(),any(RequestTaskDto.class))).thenReturn(Mono.error(new TaskDateOutOfRangeInProject()));
         //then
         webTestClient
                 .post()
@@ -77,7 +77,7 @@ class TaskControllerTest {
     void shouldReturn401WhileCreatingTask(){
         //given
         //when
-        when(taskService.createTaskByTokenAndProjectId(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new NoPermissionException()));
+        when(taskService.createTaskByTokenAndProjectId(anyString(),anyString(),any(RequestTaskDto.class))).thenReturn(Mono.error(new NoPermissionException()));
         //then
         webTestClient
                 .post()
@@ -91,7 +91,7 @@ class TaskControllerTest {
     void shouldReturn200WhileEditingTask() {
         //given
         //when
-        when(taskService.editTaskByTokenAndId(anyString(), anyString(), any(RestTaskDto.class))).thenReturn(Mono.just(taskDto));
+        when(taskService.editTaskByTokenAndId(anyString(), anyString(), any(RequestTaskDto.class))).thenReturn(Mono.just(taskDto));
         //then
         webTestClient
                 .patch()
@@ -106,7 +106,7 @@ class TaskControllerTest {
     void shouldReturn400WhileEditingTask(){
         //given
         //when
-        when(taskService.editTaskByTokenAndId(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new TaskDateOutOfRangeInProject()));
+        when(taskService.editTaskByTokenAndId(anyString(),anyString(),any(RequestTaskDto.class))).thenReturn(Mono.error(new TaskDateOutOfRangeInProject()));
         //then
         webTestClient
                 .patch()
@@ -121,7 +121,7 @@ class TaskControllerTest {
     void shouldReturn401WhileEditingTask(){
         //given
         //when
-        when(taskService.editTaskByTokenAndId(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new NoPermissionException()));
+        when(taskService.editTaskByTokenAndId(anyString(),anyString(),any(RequestTaskDto.class))).thenReturn(Mono.error(new NoPermissionException()));
         //then
         webTestClient
                 .patch()

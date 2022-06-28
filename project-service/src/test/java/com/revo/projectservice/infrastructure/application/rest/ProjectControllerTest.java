@@ -1,7 +1,7 @@
 package com.revo.projectservice.infrastructure.application.rest;
 
 import com.revo.projectservice.domain.dto.ProjectDto;
-import com.revo.projectservice.domain.dto.RestProjectDto;
+import com.revo.projectservice.domain.dto.RequestProjectDto;
 import com.revo.projectservice.domain.exception.NoPermissionException;
 import com.revo.projectservice.domain.port.ProjectService;
 import org.junit.jupiter.api.Test;
@@ -103,7 +103,7 @@ class ProjectControllerTest {
     void shouldReturn201WhileCreatingProject() {
         //given
         //when
-        when(projectService.createProjectByToken(anyString(), any(RestProjectDto.class))).thenReturn(Mono.just(projectDto));
+        when(projectService.createProjectByToken(anyString(), any(RequestProjectDto.class))).thenReturn(Mono.just(projectDto));
         //then
         webTestClient
                 .post()
@@ -118,7 +118,7 @@ class ProjectControllerTest {
     void shouldReturn401WhileCreatingProject(){
         //given
         //when
-        when(projectService.createProjectByToken(anyString(), any(RestProjectDto.class))).thenReturn(Mono.error(new NoPermissionException()));
+        when(projectService.createProjectByToken(anyString(), any(RequestProjectDto.class))).thenReturn(Mono.error(new NoPermissionException()));
         //then
         webTestClient
                 .post()
@@ -161,7 +161,7 @@ class ProjectControllerTest {
     void shouldReturn200WhileEditingProject() {
         //given
         //when
-        when(projectService.editProjectByTokenAndId(anyString(), anyString(), any(RestProjectDto.class))).thenReturn(Mono.just(projectDto));
+        when(projectService.editProjectByTokenAndId(anyString(), anyString(), any(RequestProjectDto.class))).thenReturn(Mono.just(projectDto));
         //then
         webTestClient
                 .patch()
@@ -176,7 +176,7 @@ class ProjectControllerTest {
     void shouldReturn401WhileEditingProject() {
         //given
         //when
-        when(projectService.editProjectByTokenAndId(anyString(), anyString(), any(RestProjectDto.class))).thenReturn(Mono.error(new NoPermissionException()));
+        when(projectService.editProjectByTokenAndId(anyString(), anyString(), any(RequestProjectDto.class))).thenReturn(Mono.error(new NoPermissionException()));
         //then
         webTestClient
                 .patch()

@@ -2,13 +2,13 @@ package com.revo.projectservice.domain.dto;
 
 import java.time.LocalDateTime;
 
-public class RestProjectDto {
+public class RequestProjectDto {
 
     private String name;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    public RestProjectDto(String name, LocalDateTime startDate, LocalDateTime endDate) {
+    public RequestProjectDto(String name, LocalDateTime startDate, LocalDateTime endDate) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;

@@ -1,8 +1,8 @@
 package com.revo.projectservice.domain;
 
 import com.revo.projectservice.domain.dto.ProjectDto;
-import com.revo.projectservice.domain.dto.RestProjectDto;
-import com.revo.projectservice.domain.dto.RestTaskDto;
+import com.revo.projectservice.domain.dto.RequestProjectDto;
+import com.revo.projectservice.domain.dto.RequestTaskDto;
 import com.revo.projectservice.domain.dto.TaskDto;
 import com.revo.projectservice.domain.exception.NoPermissionException;
 import com.revo.projectservice.domain.exception.NoTaskFoundException;
@@ -56,13 +56,13 @@ public class DomainServiceImp implements ProjectService, TaskService {
     }
 
     @Override
-    public Mono<ProjectDto> createProjectByToken(String token, RestProjectDto projectDto) {
+    public Mono<ProjectDto> createProjectByToken(String token, RequestProjectDto requestProjectDto) {
         return getUserFromAuthServiceAsResponse(token)
                 .bodyToMono(UserVO.class)
                 .flatMap(user -> {
-                    ProjectDto dto = Mapper.mapProjectFromRestDto(projectDto);
-                    dto.setOwner(user.getUsername());
-                    return projectRepositoryPort.saveProject(dto);
+                    ProjectDto projectDto = Mapper.mapProjectFromRestDto(requestProjectDto);
+                    projectDto.setOwner(user.getUsername());
+                    return projectRepositoryPort.saveProject(projectDto);
                 });
     }
 
@@ -74,32 +74,31 @@ public class DomainServiceImp implements ProjectService, TaskService {
     }
 
     @Override
-    public Mono<ProjectDto> editProjectByTokenAndId(String token, String id, RestProjectDto projectDto) {
+    public Mono<ProjectDto> editProjectByTokenAndId(String token, String id, RequestProjectDto requestProjectDto) {
         return getUserFromAuthServiceAsResponse(token)
                 .bodyToMono(UserVO.class)
                 .flatMap(user -> {
-                    ProjectDto dto = Mapper.mapProjectFromRestDto(projectDto);
-                    dto.setId(id);
-                    return projectRepositoryPort.saveProject(dto);
+                    ProjectDto projectDto = Mapper.mapProjectFromRestDto(requestProjectDto);
+                    projectDto.setId(id);
+                    return projectRepositoryPort.saveProject(projectDto);
                 });
     }
 
     @Override
-    public Mono<TaskDto> createTaskByTokenAndProjectId(String token, String projectId, RestTaskDto taskDto) {
+    public Mono<TaskDto> createTaskByTokenAndProjectId(String token, String projectId, RequestTaskDto requestTaskDto) {
         return getUserFromAuthServiceAsResponse(token)
                 .bodyToMono(UserVO.class)
                 .flatMap(user -> {
-                    Mono<ProjectDto> dto = projectRepositoryPort.getProjectByOwner(projectId, user.getUsername());
-                    return dto.flatMap(target -> {
-                        if(target.getEndDate().isBefore(taskDto.getEndDate()) || target.getStartDate().isAfter(taskDto.getStartDate())){
+                    return projectRepositoryPort.getProjectByOwner(projectId, user.getUsername()).flatMap(projectDto -> {
+                        if(projectDto.getEndDate().isBefore(requestTaskDto.getEndDate()) || projectDto.getStartDate().isAfter(requestTaskDto.getStartDate())){
                             return Mono.error(new TaskDateOutOfRangeInProject());
                         }
-                        TaskDto task = Mapper.mapTaskFromRestDto(taskDto);
-                        task.setId(generateId());
-                        target.getTasks().add(task);
-                        projectRepositoryPort.saveProject(target)
+                        TaskDto taskDto = Mapper.mapTaskFromRestDto(requestTaskDto);
+                        taskDto.setId(generateId());
+                        projectDto.getTasks().add(taskDto);
+                        projectRepositoryPort.saveProject(projectDto)
                                 .subscribe();
-                        return Mono.just(task);
+                        return Mono.just(taskDto);
                     });
                 });
     }
@@ -109,20 +108,20 @@ public class DomainServiceImp implements ProjectService, TaskService {
     }
 
     @Override
-    public Mono<TaskDto> editTaskByTokenAndId(String token, String id, RestTaskDto taskDto) {
+    public Mono<TaskDto> editTaskByTokenAndId(String token, String id, RequestTaskDto requestTaskDto) {
         return getUserFromAuthServiceAsResponse(token)
                 .bodyToMono(UserVO.class)
                 .flatMap(user -> {
-                    return Mono.from(projectRepositoryPort.getAllProjectsByOwner(user.getUsername()).flatMap(project -> {
-                        if(project.getEndDate().isBefore(taskDto.getEndDate()) || project.getStartDate().isAfter(taskDto.getStartDate())){
+                    return Mono.from(projectRepositoryPort.getAllProjectsByOwner(user.getUsername()).flatMap(projectDto -> {
+                        if(projectDto.getEndDate().isBefore(requestTaskDto.getEndDate()) || projectDto.getStartDate().isAfter(requestTaskDto.getStartDate())){
                             return Mono.error(new TaskDateOutOfRangeInProject());
                         }
-                        for (TaskDto task : project.getTasks()) {
-                            if (Objects.equals(task.getId(), id)) {
-                                updateTask(task, taskDto);
-                                projectRepositoryPort.saveProject(project)
+                        for (TaskDto taskDto : projectDto.getTasks()) {
+                            if (Objects.equals(taskDto.getId(), id)) {
+                                updateTask(taskDto, requestTaskDto);
+                                projectRepositoryPort.saveProject(projectDto)
                                         .subscribe();
-                                return Mono.just(task);
+                                return Mono.just(taskDto);
                             }
                         }
                         return Mono.error(new NoTaskFoundException());
@@ -130,11 +129,11 @@ public class DomainServiceImp implements ProjectService, TaskService {
                 });
     }
 
-    private void updateTask(TaskDto task, RestTaskDto taskDto) {
-        task.setName(taskDto.getName());
-        task.setDescription(taskDto.getDescription());
-        task.setStartDate(taskDto.getStartDate());
-        task.setEndDate(taskDto.getEndDate());
+    private void updateTask(TaskDto taskDto, RequestTaskDto requestTaskDto) {
+        taskDto.setName(requestTaskDto.getName());
+        taskDto.setDescription(requestTaskDto.getDescription());
+        taskDto.setStartDate(requestTaskDto.getStartDate());
+        taskDto.setEndDate(requestTaskDto.getEndDate());
     }
 
     @Override
@@ -142,11 +141,11 @@ public class DomainServiceImp implements ProjectService, TaskService {
         return getUserFromAuthServiceAsResponse(token)
                 .bodyToMono(UserVO.class)
                 .flatMap(user -> {
-                    return Mono.from(projectRepositoryPort.getAllProjectsByOwner(user.getUsername()).flatMap(project -> {
-                        for (TaskDto task : project.getTasks()) {
-                            if (Objects.equals(task.getId(), id)) {
+                    return Mono.from(projectRepositoryPort.getAllProjectsByOwner(user.getUsername()).flatMap(projectDto -> {
+                        for (TaskDto taskDto : projectDto.getTasks()) {
+                            if (Objects.equals(taskDto.getId(), id)) {
                                 projectRepositoryPort.deleteProject(id, user.getUsername());
-                                return Mono.just(task);
+                                return Mono.just(taskDto);
                             }
                         }
                         return Mono.error(new NoTaskFoundException());

@@ -1,8 +1,8 @@
 package com.revo.projectservice.domain;
 
 import com.revo.projectservice.domain.dto.ProjectDto;
-import com.revo.projectservice.domain.dto.RestProjectDto;
-import com.revo.projectservice.domain.dto.RestTaskDto;
+import com.revo.projectservice.domain.dto.RequestProjectDto;
+import com.revo.projectservice.domain.dto.RequestTaskDto;
 import com.revo.projectservice.domain.dto.TaskDto;
 
 import java.util.List;
@@ -64,7 +64,7 @@ class Mapper {
                 .build();
     }
 
-    public static ProjectDto mapProjectFromRestDto(RestProjectDto projectDto) {
+    public static ProjectDto mapProjectFromRestDto(RequestProjectDto projectDto) {
         return ProjectDto.Builder.aProjectDto()
                 .name(projectDto.getName())
                 .startDate(projectDto.getStartDate())
@@ -72,7 +72,7 @@ class Mapper {
                 .build();
     }
 
-    public static TaskDto mapTaskFromRestDto(RestTaskDto taskDto) {
+    public static TaskDto mapTaskFromRestDto(RequestTaskDto taskDto) {
         return TaskDto.Builder.aTaskDto()
                 .name(taskDto.getName())
                 .description(taskDto.getDescription())
