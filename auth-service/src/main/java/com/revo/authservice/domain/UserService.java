@@ -4,6 +4,7 @@ import com.revo.authservice.domain.dto.UserDto;
 import com.revo.authservice.domain.exception.BadLoginException;
 import com.revo.authservice.domain.exception.EmailInUseException;
 import com.revo.authservice.domain.exception.UsernameInUseException;
+import com.revo.authservice.domain.port.EncoderPort;
 import com.revo.authservice.domain.port.JwtPort;
 import com.revo.authservice.domain.port.UserRepositoryPort;
 import com.revo.authservice.domain.port.UserServicePort;
@@ -15,17 +16,25 @@ public class UserService implements UserServicePort {
 
     private final UserRepositoryPort userRepositoryPort;
     private final JwtPort jwtPort;
+    private final EncoderPort encoderPort;
 
-    public UserService(UserRepositoryPort userRepositoryPort, JwtPort jwtPort) {
+    public UserService(UserRepositoryPort userRepositoryPort, JwtPort jwtPort, EncoderPort encoderPort) {
         this.userRepositoryPort = userRepositoryPort;
         this.jwtPort = jwtPort;
+        this.encoderPort = encoderPort;
     }
 
     @Override
     public Mono<UserDto> createUser(UserDto userDto) {
         return checkExistsByEmail(userDto.email())
                 .then(checkExistsByUsername(userDto.username()))
+                .then(encodePassword(userDto))
                 .then(save(userDto));
+    }
+
+    private Mono<UserDto> encodePassword(UserDto userDto) {
+        return Mono.just(userDto)
+                .map(dto -> new UserDto(userDto.id(), userDto.username(), encoderPort.encode(userDto.password()), userDto.email()));
     }
 
     private Mono<UserDto> save(UserDto userDto) {
@@ -86,7 +95,7 @@ public class UserService implements UserServicePort {
     }
 
     private boolean passwordNotMatch(String basePassword, String requestPassword) {
-        return !Objects.equals(basePassword, requestPassword);
+        return !encoderPort.matches(requestPassword, basePassword);
     }
 
 }
