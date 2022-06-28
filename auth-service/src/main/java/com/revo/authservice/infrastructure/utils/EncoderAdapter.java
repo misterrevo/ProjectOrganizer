@@ -14,12 +14,12 @@ class EncoderAdapter implements EncoderPort {
     }
 
     @Override
-    public String encode(String rawPassword) {
+    public String encodePassword(String rawPassword) {
         return bCryptPasswordEncoder.encode(rawPassword);
     }
 
     @Override
-    public boolean matches(String rawPassword, String encodedPassword) {
+    public boolean passwordMatches(String rawPassword, String encodedPassword) {
         return bCryptPasswordEncoder.matches(rawPassword, encodedPassword);
     }
 }

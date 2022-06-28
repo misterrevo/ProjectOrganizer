@@ -17,7 +17,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/projects")
@@ -34,34 +33,34 @@ class ProjectController {
     }
 
     @GetMapping
-    ResponseEntity<Flux<ProjectDto>> getAllProjects(@RequestHeader(AUTHORIZATION_HEADER) String token){
+    ResponseEntity<Flux<ProjectDto>> getAllProjectsByToken(@RequestHeader(AUTHORIZATION_HEADER) String token){
         return ResponseEntity.ok(Flux.just(token)
-                .flatMap(target -> projectServicePort.getAllProjects(token)));
+                .flatMap(target -> projectServicePort.getAllProjectsByToken(token)));
     }
 
     @GetMapping("/{id}")
-    Mono<ResponseEntity<ProjectDto>> getProject(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id){
-        return projectServicePort.getProject(token, id)
+    Mono<ResponseEntity<ProjectDto>> getProjectByTokenAndId(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id){
+        return projectServicePort.getProjectByTokenAndId(token, id)
                 .map(projectDto -> ResponseEntity.ok(projectDto));
     }
 
     @PostMapping
-    Mono<ResponseEntity<ProjectDto>> createProject(@RequestHeader(AUTHORIZATION_HEADER) String token, @RequestBody Mono<RestProjectDto> projectDtoMono){
+    Mono<ResponseEntity<ProjectDto>> createProjectByToken(@RequestHeader(AUTHORIZATION_HEADER) String token, @RequestBody Mono<RestProjectDto> projectDtoMono){
         return projectDtoMono
-                .flatMap(dto -> projectServicePort.createProject(token, dto))
+                .flatMap(dto -> projectServicePort.createProjectByToken(token, dto))
                 .map(project -> ResponseEntity.created(URI.create(PROJECTS_LOCATION)).body(project));
     }
 
     @DeleteMapping("/{id}")
-    Mono<ResponseEntity<ProjectDto>> deleteProject(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id){
-        return projectServicePort.deleteProject(token, id)
+    Mono<ResponseEntity<ProjectDto>> deleteProjectByTokenAndId(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id){
+        return projectServicePort.deleteProjectByTokenAndId(token, id)
                 .map(projectDto -> ResponseEntity.ok(projectDto));
     }
 
     @PatchMapping("/{id}")
-    Mono<ResponseEntity<ProjectDto>> editProject(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id, @RequestBody Mono<RestProjectDto> restProjectDtoMono){
+    Mono<ResponseEntity<ProjectDto>> editProjectByTokenAndId(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id, @RequestBody Mono<RestProjectDto> restProjectDtoMono){
         return restProjectDtoMono
-                .flatMap(dto -> projectServicePort.editProject(token, id, dto))
+                .flatMap(dto -> projectServicePort.editProjectByTokenAndId(token, id, dto))
                 .map(projectDto -> ResponseEntity.ok(projectDto));
     }
 }

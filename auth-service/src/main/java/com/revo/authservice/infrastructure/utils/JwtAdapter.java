@@ -21,7 +21,7 @@ class JwtAdapter implements JwtPort {
     private long expirationTime;
 
     @Override
-    public String createToken(String username) {
+    public String createTokenFromUsername(String username) {
         return TOKEN_PREFIX + JWT.create()
                 .withSubject(username)
                 .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime))
@@ -29,7 +29,7 @@ class JwtAdapter implements JwtPort {
     }
 
     @Override
-    public String getSubject(String token) {
+    public String getSubjectFromToken(String token) {
         try{
             return JWT.require(Algorithm.HMAC256(secret))
                     .build()

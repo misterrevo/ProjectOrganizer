@@ -6,22 +6,16 @@ import com.revo.projectservice.domain.exception.NoPermissionException;
 import com.revo.projectservice.domain.port.ProjectServicePort;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.util.UriBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -53,7 +47,7 @@ class ProjectControllerTest {
     void shouldReturn200WhileGettingAllProjects() {
         //given
         //when
-        when(projectServicePort.getAllProjects(anyString())).thenReturn(Flux.just(projectDto));
+        when(projectServicePort.getAllProjectsByToken(anyString())).thenReturn(Flux.just(projectDto));
         //then
         webTestClient
                 .get()
@@ -67,7 +61,7 @@ class ProjectControllerTest {
     void shouldReturn401WhileGettingAllProjects(){
         //given
         //when
-        when(projectServicePort.getAllProjects(anyString())).thenReturn(Flux.error(new NoPermissionException()));
+        when(projectServicePort.getAllProjectsByToken(anyString())).thenReturn(Flux.error(new NoPermissionException()));
         //then
         webTestClient
                 .get()
@@ -81,7 +75,7 @@ class ProjectControllerTest {
     void shouldReturn200WhileGettingProject() {
         //given
         //when
-        when(projectServicePort.getProject(anyString(), anyString())).thenReturn(Mono.just(projectDto));
+        when(projectServicePort.getProjectByTokenAndId(anyString(), anyString())).thenReturn(Mono.just(projectDto));
         //then
         webTestClient
                 .get()
@@ -95,7 +89,7 @@ class ProjectControllerTest {
     void shouldReturn401WhileGettingProject(){
         //given
         //when
-        when(projectServicePort.getProject(anyString(), anyString())).thenReturn(Mono.error(new NoPermissionException()));
+        when(projectServicePort.getProjectByTokenAndId(anyString(), anyString())).thenReturn(Mono.error(new NoPermissionException()));
         //then
         webTestClient
                 .get()
@@ -109,7 +103,7 @@ class ProjectControllerTest {
     void shouldReturn201WhileCreatingProject() {
         //given
         //when
-        when(projectServicePort.createProject(anyString(), any(RestProjectDto.class))).thenReturn(Mono.just(projectDto));
+        when(projectServicePort.createProjectByToken(anyString(), any(RestProjectDto.class))).thenReturn(Mono.just(projectDto));
         //then
         webTestClient
                 .post()
@@ -124,7 +118,7 @@ class ProjectControllerTest {
     void shouldReturn401WhileCreatingProject(){
         //given
         //when
-        when(projectServicePort.createProject(anyString(), any(RestProjectDto.class))).thenReturn(Mono.error(new NoPermissionException()));
+        when(projectServicePort.createProjectByToken(anyString(), any(RestProjectDto.class))).thenReturn(Mono.error(new NoPermissionException()));
         //then
         webTestClient
                 .post()
@@ -139,7 +133,7 @@ class ProjectControllerTest {
     void shouldReturn200WhileDeletingProject() {
         //given
         //when
-        when(projectServicePort.deleteProject(anyString(), anyString())).thenReturn(Mono.just(projectDto));
+        when(projectServicePort.deleteProjectByTokenAndId(anyString(), anyString())).thenReturn(Mono.just(projectDto));
         //then
         webTestClient
                 .delete()
@@ -153,7 +147,7 @@ class ProjectControllerTest {
     void shouldReturn401WhileDeletingProject() {
         //given
         //when
-        when(projectServicePort.deleteProject(anyString(), anyString())).thenReturn(Mono.error(new NoPermissionException()));
+        when(projectServicePort.deleteProjectByTokenAndId(anyString(), anyString())).thenReturn(Mono.error(new NoPermissionException()));
         //then
         webTestClient
                 .delete()
@@ -167,7 +161,7 @@ class ProjectControllerTest {
     void shouldReturn200WhileEditingProject() {
         //given
         //when
-        when(projectServicePort.editProject(anyString(), anyString(), any(RestProjectDto.class))).thenReturn(Mono.just(projectDto));
+        when(projectServicePort.editProjectByTokenAndId(anyString(), anyString(), any(RestProjectDto.class))).thenReturn(Mono.just(projectDto));
         //then
         webTestClient
                 .patch()
@@ -182,7 +176,7 @@ class ProjectControllerTest {
     void shouldReturn401WhileEditingProject() {
         //given
         //when
-        when(projectServicePort.editProject(anyString(), anyString(), any(RestProjectDto.class))).thenReturn(Mono.error(new NoPermissionException()));
+        when(projectServicePort.editProjectByTokenAndId(anyString(), anyString(), any(RestProjectDto.class))).thenReturn(Mono.error(new NoPermissionException()));
         //then
         webTestClient
                 .patch()

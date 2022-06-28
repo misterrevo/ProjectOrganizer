@@ -1,6 +1,6 @@
 package com.revo.authservice.domain.port;
 
 public interface EncoderPort {
-    String encode(String rawPassword);
-    boolean matches(String rawPassword, String encodedPassword);
+    String encodePassword(String rawPassword);
+    boolean passwordMatches(String rawPassword, String encodedPassword);
 }

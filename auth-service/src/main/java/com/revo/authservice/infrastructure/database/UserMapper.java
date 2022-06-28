@@ -9,6 +9,6 @@ interface UserMapper {
 
     UserMapper Mapper = Mappers.getMapper(UserMapper.class);
 
-    UserDto toDto(UserEntity entity);
-    UserEntity fromDto(UserDto userDto);
+    UserDto mapUserEntityToDto(UserEntity entity);
+    UserEntity mapUserEntityFromDto(UserDto userDto);
 }

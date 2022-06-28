@@ -10,8 +10,6 @@ import com.revo.authservice.domain.port.UserRepositoryPort;
 import com.revo.authservice.domain.port.UserServicePort;
 import reactor.core.publisher.Mono;
 
-import java.util.Objects;
-
 public class UserService implements UserServicePort {
 
     private final UserRepositoryPort userRepositoryPort;
@@ -26,23 +24,23 @@ public class UserService implements UserServicePort {
 
     @Override
     public Mono<UserDto> createUser(UserDto userDto) {
-        return checkExistsByEmail(userDto.email())
-                .then(checkExistsByUsername(userDto.username()))
+        return checkUserExistsByEmail(userDto.email())
+                .then(checkUserExistsByUsername(userDto.username()))
                 .then(encodePassword(userDto))
-                .then(save(userDto));
+                .then(saveUser(userDto));
     }
 
     private Mono<UserDto> encodePassword(UserDto userDto) {
         return Mono.just(userDto)
-                .map(dto -> new UserDto(userDto.id(), userDto.username(), encoderPort.encode(userDto.password()), userDto.email()));
+                .map(dto -> new UserDto(userDto.id(), userDto.username(), encoderPort.encodePassword(userDto.password()), userDto.email()));
     }
 
-    private Mono<UserDto> save(UserDto userDto) {
-        return userRepositoryPort.save(userDto);
+    private Mono<UserDto> saveUser(UserDto userDto) {
+        return userRepositoryPort.saveUser(userDto);
     }
 
-    private Mono<Boolean> checkExistsByUsername(String username) {
-        return userRepositoryPort.existsByUsername(username)
+    private Mono<Boolean> checkUserExistsByUsername(String username) {
+        return userRepositoryPort.userExistsByUsername(username)
                 .flatMap(bool -> {
                     if(bool){
                         return Mono.error(new UsernameInUseException(username));
@@ -51,8 +49,8 @@ public class UserService implements UserServicePort {
                 });
     }
 
-    private Mono<Boolean> checkExistsByEmail(String email) {
-        return userRepositoryPort.existsByEmail(email)
+    private Mono<Boolean> checkUserExistsByEmail(String email) {
+        return userRepositoryPort.userExistsByEmail(email)
                 .flatMap(bool -> {
                     if(bool){
                         return Mono.error(new EmailInUseException(email));
@@ -64,11 +62,11 @@ public class UserService implements UserServicePort {
     @Override
     public Mono<UserDto> getUserFromToken(String token) {
         return userRepositoryPort
-                .getUserByUsername(getSubject(token));
+                .getUserByUsername(getSubjectFromToken(token));
     }
 
-    private String getSubject(String token) {
-        return jwtPort.getSubject(token);
+    private String getSubjectFromToken(String token) {
+        return jwtPort.getSubjectFromToken(token);
     }
 
     @Override
@@ -77,17 +75,17 @@ public class UserService implements UserServicePort {
     }
 
     private String createToken(String username) {
-        return jwtPort.createToken(username);
+        return jwtPort.createTokenFromUsername(username);
     }
 
     @Override
     public Mono<UserDto> loginUser(UserDto userDto) {
         return userRepositoryPort.getUserByUsername(userDto.username())
-                .flatMap(dto -> checkPassword(dto, userDto))
+                .flatMap(dto -> checkPasswordMatches(dto, userDto))
                 .switchIfEmpty(Mono.error(new BadLoginException()));
     }
 
-    private Mono<UserDto> checkPassword(UserDto baseDto, UserDto requestDto) {
+    private Mono<UserDto> checkPasswordMatches(UserDto baseDto, UserDto requestDto) {
         if(passwordNotMatch(baseDto.password(), requestDto.password())){
             return Mono.error(new BadLoginException());
         }
@@ -95,7 +93,7 @@ public class UserService implements UserServicePort {
     }
 
     private boolean passwordNotMatch(String basePassword, String requestPassword) {
-        return !encoderPort.matches(requestPassword, basePassword);
+        return !encoderPort.passwordMatches(requestPassword, basePassword);
     }
 
 }

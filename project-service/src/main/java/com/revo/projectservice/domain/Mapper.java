@@ -10,24 +10,24 @@ import java.util.stream.Collectors;
 
 class Mapper {
 
-    static Project fromDto(ProjectDto projectDto){
+    static Project mapProjectFromDto(ProjectDto projectDto){
         return Project.Builder.aProject()
                 .id(projectDto.getId())
                 .owner(projectDto.getOwner())
                 .name(projectDto.getName())
                 .startDate(projectDto.getStartDate())
                 .endDate(projectDto.getEndDate())
-                .tasks(fromDto(projectDto.getTasks()))
+                .tasks(mapTaskListFromDto(projectDto.getTasks()))
                 .build();
     }
 
-    private static List<Task> fromDto(List<TaskDto> tasks) {
+    private static List<Task> mapTaskListFromDto(List<TaskDto> tasks) {
         return tasks.stream()
-                .map(Mapper::fromDto)
+                .map(Mapper::mapTaskFromDto)
                 .collect(Collectors.toList());
     }
 
-    static Task fromDto(TaskDto taskDto) {
+    static Task mapTaskFromDto(TaskDto taskDto) {
         return Task.Builder.aTask()
                 .id(taskDto.getId())
                 .name(taskDto.getName())
@@ -37,24 +37,24 @@ class Mapper {
                 .build();
     }
 
-    static ProjectDto toDto(Project project){
+    static ProjectDto mapProjectToDto(Project project){
         return ProjectDto.Builder.aProjectDto()
                 .id(project.getId())
                 .owner(project.getOwner())
                 .name(project.getName())
                 .startDate(project.getStartDate())
                 .endDate(project.getEndDate())
-                .tasks(toDto(project.getTasks()))
+                .tasks(mapTaskListToDto(project.getTasks()))
                 .build();
     }
 
-    private static List<TaskDto> toDto(List<Task> tasks) {
+    private static List<TaskDto> mapTaskListToDto(List<Task> tasks) {
         return tasks.stream()
-                .map(Mapper::toDto)
+                .map(Mapper::mapTaskToDto)
                 .collect(Collectors.toList());
     }
 
-    static TaskDto toDto(Task task) {
+    static TaskDto mapTaskToDto(Task task) {
         return TaskDto.Builder.aTaskDto()
                 .id(task.getId())
                 .name(task.getName())
@@ -64,7 +64,7 @@ class Mapper {
                 .build();
     }
 
-    public static ProjectDto fromRest(RestProjectDto projectDto) {
+    public static ProjectDto mapProjectFromRestDto(RestProjectDto projectDto) {
         return ProjectDto.Builder.aProjectDto()
                 .name(projectDto.getName())
                 .startDate(projectDto.getStartDate())
@@ -72,7 +72,7 @@ class Mapper {
                 .build();
     }
 
-    public static TaskDto fromRest(RestTaskDto taskDto) {
+    public static TaskDto mapTaskFromRestDto(RestTaskDto taskDto) {
         return TaskDto.Builder.aTaskDto()
                 .name(taskDto.getName())
                 .description(taskDto.getDescription())

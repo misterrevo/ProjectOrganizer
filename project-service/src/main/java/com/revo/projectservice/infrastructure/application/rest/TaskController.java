@@ -32,22 +32,22 @@ class TaskController {
     }
 
     @PostMapping("/{projectId}")
-    Mono<ResponseEntity<TaskDto>> createTask(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(PROJECT_ID_PATH_VARIABLE) String projectId, @RequestBody Mono<RestTaskDto> restTaskDtoMono){
+    Mono<ResponseEntity<TaskDto>> createTaskByTokenAndProjectId(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(PROJECT_ID_PATH_VARIABLE) String projectId, @RequestBody Mono<RestTaskDto> restTaskDtoMono){
         return restTaskDtoMono
-                .flatMap(dto -> taskServicePort.createTask(token, projectId, dto))
+                .flatMap(dto -> taskServicePort.createTaskByTokenAndProjectId(token, projectId, dto))
                 .map(task -> ResponseEntity.created(URI.create(TASKS_LOCATION)).body(task));
     }
 
     @PatchMapping("/{id}")
-    Mono<ResponseEntity<TaskDto>> editTask(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id, @RequestBody Mono<RestTaskDto> restTaskDtoMono){
+    Mono<ResponseEntity<TaskDto>> editTaskByTokenAndId(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id, @RequestBody Mono<RestTaskDto> restTaskDtoMono){
         return restTaskDtoMono
-                .flatMap(dto -> taskServicePort.editTask(token, id, dto))
+                .flatMap(dto -> taskServicePort.editTaskByTokenAndId(token, id, dto))
                 .map(task -> ResponseEntity.ok(task));
     }
 
     @DeleteMapping("/{id}")
-    Mono<ResponseEntity<TaskDto>> deleteTask(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id){
-        return taskServicePort.deleteTask(token, id)
+    Mono<ResponseEntity<TaskDto>> deleteTaskByTokenAndId(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id){
+        return taskServicePort.deleteTaskByTokenAndId(token, id)
                 .map(task -> ResponseEntity.ok(task));
     }
 }

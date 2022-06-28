@@ -6,7 +6,7 @@ import reactor.core.publisher.Mono;
 
 public interface TaskServicePort {
 
-    Mono<TaskDto> createTask(String token, String projectId, RestTaskDto taskDto);
-    Mono<TaskDto> editTask(String token, String id, RestTaskDto taskDto);
-    Mono<TaskDto> deleteTask(String token, String id);
+    Mono<TaskDto> createTaskByTokenAndProjectId(String token, String projectId, RestTaskDto taskDto);
+    Mono<TaskDto> editTaskByTokenAndId(String token, String id, RestTaskDto taskDto);
+    Mono<TaskDto> deleteTaskByTokenAndId(String token, String id);
 }

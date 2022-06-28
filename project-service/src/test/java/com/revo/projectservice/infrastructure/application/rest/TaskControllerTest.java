@@ -47,7 +47,7 @@ class TaskControllerTest {
     void shouldReturn201WhileCreatingTask() {
         //given
         //when
-        when(taskServicePort.createTask(anyString(), anyString(), any(RestTaskDto.class))).thenReturn(Mono.just(taskDto));
+        when(taskServicePort.createTaskByTokenAndProjectId(anyString(), anyString(), any(RestTaskDto.class))).thenReturn(Mono.just(taskDto));
         //then
         webTestClient
                 .post()
@@ -62,7 +62,7 @@ class TaskControllerTest {
     void shouldReturn400WhileCreatingTask(){
         //given
         //when
-        when(taskServicePort.createTask(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new TaskDateOutOfRangeInProject()));
+        when(taskServicePort.createTaskByTokenAndProjectId(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new TaskDateOutOfRangeInProject()));
         //then
         webTestClient
                 .post()
@@ -77,7 +77,7 @@ class TaskControllerTest {
     void shouldReturn401WhileCreatingTask(){
         //given
         //when
-        when(taskServicePort.createTask(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new NoPermissionException()));
+        when(taskServicePort.createTaskByTokenAndProjectId(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new NoPermissionException()));
         //then
         webTestClient
                 .post()
@@ -91,7 +91,7 @@ class TaskControllerTest {
     void shouldReturn200WhileEditingTask() {
         //given
         //when
-        when(taskServicePort.editTask(anyString(), anyString(), any(RestTaskDto.class))).thenReturn(Mono.just(taskDto));
+        when(taskServicePort.editTaskByTokenAndId(anyString(), anyString(), any(RestTaskDto.class))).thenReturn(Mono.just(taskDto));
         //then
         webTestClient
                 .patch()
@@ -106,7 +106,7 @@ class TaskControllerTest {
     void shouldReturn400WhileEditingTask(){
         //given
         //when
-        when(taskServicePort.editTask(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new TaskDateOutOfRangeInProject()));
+        when(taskServicePort.editTaskByTokenAndId(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new TaskDateOutOfRangeInProject()));
         //then
         webTestClient
                 .patch()
@@ -121,7 +121,7 @@ class TaskControllerTest {
     void shouldReturn401WhileEditingTask(){
         //given
         //when
-        when(taskServicePort.editTask(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new NoPermissionException()));
+        when(taskServicePort.editTaskByTokenAndId(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new NoPermissionException()));
         //then
         webTestClient
                 .patch()
@@ -136,7 +136,7 @@ class TaskControllerTest {
     void shouldReturn200WhileDeletingTask() {
         //given
         //when
-        when(taskServicePort.deleteTask(anyString(), anyString())).thenReturn(Mono.just(taskDto));
+        when(taskServicePort.deleteTaskByTokenAndId(anyString(), anyString())).thenReturn(Mono.just(taskDto));
         //then
         webTestClient
                 .delete()
@@ -149,7 +149,7 @@ class TaskControllerTest {
     void shouldReturn401WhileDeletingTask() {
         //given
         //when
-        when(taskServicePort.deleteTask(anyString(), anyString())).thenReturn(Mono.error(new NoPermissionException()));
+        when(taskServicePort.deleteTaskByTokenAndId(anyString(), anyString())).thenReturn(Mono.error(new NoPermissionException()));
         //then
         webTestClient
                 .delete()

@@ -6,9 +6,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface ProjectServicePort {
-    Flux<ProjectDto> getAllProjects(String token);
-    Mono<ProjectDto> getProject(String token, String id);
-    Mono<ProjectDto> createProject(String token, RestProjectDto projectDto);
-    Mono<ProjectDto> deleteProject(String token, String id);
-    Mono<ProjectDto> editProject(String token, String id, RestProjectDto projectDto);
+    Flux<ProjectDto> getAllProjectsByToken(String token);
+    Mono<ProjectDto> getProjectByTokenAndId(String token, String id);
+    Mono<ProjectDto> createProjectByToken(String token, RestProjectDto projectDto);
+    Mono<ProjectDto> deleteProjectByTokenAndId(String token, String id);
+    Mono<ProjectDto> editProjectByTokenAndId(String token, String id, RestProjectDto projectDto);
 }

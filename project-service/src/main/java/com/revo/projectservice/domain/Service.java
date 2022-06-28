@@ -32,13 +32,13 @@ public class Service implements ProjectServicePort, TaskServicePort {
     }
 
     @Override
-    public Flux<ProjectDto> getAllProjects(String token) {
-        return getUser(token)
+    public Flux<ProjectDto> getAllProjectsByToken(String token) {
+        return getUserFromAuthServiceAsResponse(token)
                 .bodyToFlux(UserVO.class)
-                .flatMap(user -> projectRepositoryPort.getAllProjects(user.getUsername()));
+                .flatMap(user -> projectRepositoryPort.getAllProjectsByOwner(user.getUsername()));
     }
 
-    private WebClient.ResponseSpec getUser(String token) {
+    private WebClient.ResponseSpec getUserFromAuthServiceAsResponse(String token) {
         return WebClient.create(GATEWAY_HOST)
                 .post()
                 .uri(TRANSLATE_TOKEN_PATH)
@@ -48,56 +48,56 @@ public class Service implements ProjectServicePort, TaskServicePort {
     }
 
     @Override
-    public Mono<ProjectDto> getProject(String token, String id) {
-        return getUser(token)
+    public Mono<ProjectDto> getProjectByTokenAndId(String token, String id) {
+        return getUserFromAuthServiceAsResponse(token)
                 .bodyToMono(UserVO.class)
-                .flatMap(user -> projectRepositoryPort.getProject(id, user.getUsername()))
+                .flatMap(user -> projectRepositoryPort.getProjectByOwner(id, user.getUsername()))
                 .switchIfEmpty(Mono.error(new ProjectNotFoundException(id)));
     }
 
     @Override
-    public Mono<ProjectDto> createProject(String token, RestProjectDto projectDto) {
-        return getUser(token)
+    public Mono<ProjectDto> createProjectByToken(String token, RestProjectDto projectDto) {
+        return getUserFromAuthServiceAsResponse(token)
                 .bodyToMono(UserVO.class)
                 .flatMap(user -> {
-                    ProjectDto dto = Mapper.fromRest(projectDto);
+                    ProjectDto dto = Mapper.mapProjectFromRestDto(projectDto);
                     dto.setOwner(user.getUsername());
-                    return projectRepositoryPort.save(dto);
+                    return projectRepositoryPort.saveProject(dto);
                 });
     }
 
     @Override
-    public Mono<ProjectDto> deleteProject(String token, String id) {
-        return getUser(token)
+    public Mono<ProjectDto> deleteProjectByTokenAndId(String token, String id) {
+        return getUserFromAuthServiceAsResponse(token)
                 .bodyToMono(UserVO.class)
-                .flatMap(user -> projectRepositoryPort.delete(id, user.getUsername()));
+                .flatMap(user -> projectRepositoryPort.deleteProject(id, user.getUsername()));
     }
 
     @Override
-    public Mono<ProjectDto> editProject(String token, String id, RestProjectDto projectDto) {
-        return getUser(token)
+    public Mono<ProjectDto> editProjectByTokenAndId(String token, String id, RestProjectDto projectDto) {
+        return getUserFromAuthServiceAsResponse(token)
                 .bodyToMono(UserVO.class)
                 .flatMap(user -> {
-                    ProjectDto dto = Mapper.fromRest(projectDto);
+                    ProjectDto dto = Mapper.mapProjectFromRestDto(projectDto);
                     dto.setId(id);
-                    return projectRepositoryPort.save(dto);
+                    return projectRepositoryPort.saveProject(dto);
                 });
     }
 
     @Override
-    public Mono<TaskDto> createTask(String token, String projectId, RestTaskDto taskDto) {
-        return getUser(token)
+    public Mono<TaskDto> createTaskByTokenAndProjectId(String token, String projectId, RestTaskDto taskDto) {
+        return getUserFromAuthServiceAsResponse(token)
                 .bodyToMono(UserVO.class)
                 .flatMap(user -> {
-                    Mono<ProjectDto> dto = projectRepositoryPort.getProject(projectId, user.getUsername());
+                    Mono<ProjectDto> dto = projectRepositoryPort.getProjectByOwner(projectId, user.getUsername());
                     return dto.flatMap(target -> {
                         if(target.getEndDate().isBefore(taskDto.getEndDate()) || target.getStartDate().isAfter(taskDto.getStartDate())){
                             return Mono.error(new TaskDateOutOfRangeInProject());
                         }
-                        TaskDto task = Mapper.fromRest(taskDto);
+                        TaskDto task = Mapper.mapTaskFromRestDto(taskDto);
                         task.setId(generateId());
                         target.getTasks().add(task);
-                        projectRepositoryPort.save(target)
+                        projectRepositoryPort.saveProject(target)
                                 .subscribe();
                         return Mono.just(task);
                     });
@@ -109,18 +109,18 @@ public class Service implements ProjectServicePort, TaskServicePort {
     }
 
     @Override
-    public Mono<TaskDto> editTask(String token, String id, RestTaskDto taskDto) {
-        return getUser(token)
+    public Mono<TaskDto> editTaskByTokenAndId(String token, String id, RestTaskDto taskDto) {
+        return getUserFromAuthServiceAsResponse(token)
                 .bodyToMono(UserVO.class)
                 .flatMap(user -> {
-                    return Mono.from(projectRepositoryPort.getAllProjects(user.getUsername()).flatMap(project -> {
+                    return Mono.from(projectRepositoryPort.getAllProjectsByOwner(user.getUsername()).flatMap(project -> {
                         if(project.getEndDate().isBefore(taskDto.getEndDate()) || project.getStartDate().isAfter(taskDto.getStartDate())){
                             return Mono.error(new TaskDateOutOfRangeInProject());
                         }
                         for (TaskDto task : project.getTasks()) {
                             if (Objects.equals(task.getId(), id)) {
                                 updateTask(task, taskDto);
-                                projectRepositoryPort.save(project)
+                                projectRepositoryPort.saveProject(project)
                                         .subscribe();
                                 return Mono.just(task);
                             }
@@ -138,14 +138,14 @@ public class Service implements ProjectServicePort, TaskServicePort {
     }
 
     @Override
-    public Mono<TaskDto> deleteTask(String token, String id) {
-        return getUser(token)
+    public Mono<TaskDto> deleteTaskByTokenAndId(String token, String id) {
+        return getUserFromAuthServiceAsResponse(token)
                 .bodyToMono(UserVO.class)
                 .flatMap(user -> {
-                    return Mono.from(projectRepositoryPort.getAllProjects(user.getUsername()).flatMap(project -> {
+                    return Mono.from(projectRepositoryPort.getAllProjectsByOwner(user.getUsername()).flatMap(project -> {
                         for (TaskDto task : project.getTasks()) {
                             if (Objects.equals(task.getId(), id)) {
-                                projectRepositoryPort.delete(id, user.getUsername());
+                                projectRepositoryPort.deleteProject(id, user.getUsername());
                                 return Mono.just(task);
                             }
                         }

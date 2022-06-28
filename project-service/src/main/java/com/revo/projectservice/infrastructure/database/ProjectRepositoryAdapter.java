@@ -19,33 +19,26 @@ class ProjectRepositoryAdapter implements ProjectRepositoryPort {
     }
 
     @Override
-    public Flux<ProjectDto> getAllProjects(String owner) {
+    public Flux<ProjectDto> getAllProjectsByOwner(String owner) {
         return projectRepository.getAllByOwner(owner)
-                .map(Mapper::toDto);
+                .map(Mapper::mapProjectEntityToDto);
     }
 
     @Override
-    public Mono<ProjectDto> getProject(String id, String owner) {
+    public Mono<ProjectDto> getProjectByOwner(String id, String owner) {
         return projectRepository.getByOwnerAndId(owner, id)
-                .map(Mapper::toDto);
+                .map(Mapper::mapProjectEntityToDto);
     }
 
     @Override
-    public Mono<ProjectDto> save(ProjectDto projectDto) {
-        return projectRepository.save(Mapper.toEntity(projectDto))
-                .map(Mapper::toDto);
+    public Mono<ProjectDto> saveProject(ProjectDto projectDto) {
+        return projectRepository.save(Mapper.mapProjectDtoToEntity(projectDto))
+                .map(Mapper::mapProjectEntityToDto);
     }
 
     @Override
-    public Mono<ProjectDto> delete(String id, String owner) {
+    public Mono<ProjectDto> deleteProject(String id, String owner) {
         return projectRepository.deleteById(id)
-                .then(getProject(id, owner));
-    }
-
-    @Override
-    public Mono<ProjectDto> editProject(String id, ProjectDto projectDto) {
-        projectDto.setId(id);
-        return projectRepository.save(Mapper.toEntity(projectDto))
-                .map(Mapper::toDto);
+                .then(getProjectByOwner(id, owner));
     }
 }

@@ -17,24 +17,24 @@ class UserRepositoryAdapter implements UserRepositoryPort {
     }
 
     @Override
-    public Mono<UserDto> save(UserDto userDto) {
-        return userRepository.save(Mapper.fromDto(userDto))
-                .map(Mapper::toDto);
+    public Mono<UserDto> saveUser(UserDto userDto) {
+        return userRepository.save(Mapper.mapUserEntityFromDto(userDto))
+                .map(Mapper::mapUserEntityToDto);
     }
 
     @Override
-    public Mono<Boolean> existsByEmail(String email) {
+    public Mono<Boolean> userExistsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
     @Override
-    public Mono<Boolean> existsByUsername(String username) {
+    public Mono<Boolean> userExistsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
 
     @Override
     public Mono<UserDto> getUserByUsername(String username) {
         return userRepository.findByUsername(username)
-                .map(Mapper::toDto);
+                .map(Mapper::mapUserEntityToDto);
     }
 }

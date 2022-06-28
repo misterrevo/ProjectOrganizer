@@ -89,14 +89,4 @@ class UserEntity {
             return new UserEntity(id, username, password, email);
         }
     }
-
-    @Override
-    public String toString() {
-        return "UserEntity{" +
-                "id='" + id + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
 }

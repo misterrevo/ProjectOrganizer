@@ -18,7 +18,7 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 class BeanConfiguration {
 
     @Bean
-    public UserServicePort userServicePort(UserRepositoryPort userRepositoryPort, JwtPort jwtPort, EncoderPort encoderPort){
+    public UserServicePort createUserServiceBean(UserRepositoryPort userRepositoryPort, JwtPort jwtPort, EncoderPort encoderPort){
         return new UserService(userRepositoryPort, jwtPort, encoderPort);
     }
 }
