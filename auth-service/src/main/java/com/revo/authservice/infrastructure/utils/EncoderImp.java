@@ -10,7 +10,7 @@ class EncoderImp implements Encoder {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     EncoderImp(BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
     }
 
     @Override

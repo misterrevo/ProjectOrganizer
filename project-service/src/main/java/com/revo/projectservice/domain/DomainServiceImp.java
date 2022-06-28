@@ -136,7 +136,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
                             return Mono.error(new TaskDateOutOfRangeInProject());
                         }
                         for (TaskDto taskDto : projectDto.getTasks()) {
-                            if (Objects.equals(taskDto.getId(), id)) {
+                            if (isCurrentTask(id, taskDto)) {
                                 updateTask(taskDto, requestTaskDto);
                                 saveProjectDtoMono(projectDto).subscribe();
                                 return Mono.just(taskDto);
@@ -145,6 +145,10 @@ public class DomainServiceImp implements ProjectService, TaskService {
                         return Mono.error(new NoTaskFoundException());
                     }));
                 });
+    }
+
+    private boolean isCurrentTask(String id, TaskDto taskDto) {
+        return Objects.equals(taskDto.getId(), id);
     }
 
     private Flux<ProjectDto> getAllProjectsByOwner(String username) {
