@@ -4,22 +4,21 @@ import com.revo.authservice.domain.dto.UserDto;
 import com.revo.authservice.domain.exception.BadLoginException;
 import com.revo.authservice.domain.exception.EmailInUseException;
 import com.revo.authservice.domain.exception.UsernameInUseException;
-import com.revo.authservice.domain.port.EncoderPort;
-import com.revo.authservice.domain.port.JwtPort;
-import com.revo.authservice.domain.port.UserRepositoryPort;
-import com.revo.authservice.domain.port.UserServicePort;
+import com.revo.authservice.domain.port.Encoder;
+import com.revo.authservice.domain.port.Jwt;
+import com.revo.authservice.domain.port.UserRepository;
 import reactor.core.publisher.Mono;
 
-public class UserService implements UserServicePort {
+public class UserServiceImp implements com.revo.authservice.domain.port.UserService {
 
-    private final UserRepositoryPort userRepositoryPort;
-    private final JwtPort jwtPort;
-    private final EncoderPort encoderPort;
+    private final UserRepository userRepository;
+    private final Jwt jwt;
+    private final Encoder encoder;
 
-    public UserService(UserRepositoryPort userRepositoryPort, JwtPort jwtPort, EncoderPort encoderPort) {
-        this.userRepositoryPort = userRepositoryPort;
-        this.jwtPort = jwtPort;
-        this.encoderPort = encoderPort;
+    public UserServiceImp(UserRepository userRepository, Jwt jwt, Encoder encoder) {
+        this.userRepository = userRepository;
+        this.jwt = jwt;
+        this.encoder = encoder;
     }
 
     @Override
@@ -32,15 +31,15 @@ public class UserService implements UserServicePort {
 
     private Mono<UserDto> encodePassword(UserDto userDto) {
         return Mono.just(userDto)
-                .map(dto -> new UserDto(userDto.id(), userDto.username(), encoderPort.encodePassword(userDto.password()), userDto.email()));
+                .map(dto -> new UserDto(userDto.id(), userDto.username(), encoder.encodePassword(userDto.password()), userDto.email()));
     }
 
     private Mono<UserDto> saveUser(UserDto userDto) {
-        return userRepositoryPort.saveUser(userDto);
+        return userRepository.saveUser(userDto);
     }
 
     private Mono<Boolean> checkUserExistsByUsername(String username) {
-        return userRepositoryPort.userExistsByUsername(username)
+        return userRepository.userExistsByUsername(username)
                 .flatMap(bool -> {
                     if(bool){
                         return Mono.error(new UsernameInUseException(username));
@@ -50,7 +49,7 @@ public class UserService implements UserServicePort {
     }
 
     private Mono<Boolean> checkUserExistsByEmail(String email) {
-        return userRepositoryPort.userExistsByEmail(email)
+        return userRepository.userExistsByEmail(email)
                 .flatMap(bool -> {
                     if(bool){
                         return Mono.error(new EmailInUseException(email));
@@ -61,12 +60,12 @@ public class UserService implements UserServicePort {
 
     @Override
     public Mono<UserDto> getUserFromToken(String token) {
-        return userRepositoryPort
+        return userRepository
                 .getUserByUsername(getSubjectFromToken(token));
     }
 
     private String getSubjectFromToken(String token) {
-        return jwtPort.getSubjectFromToken(token);
+        return jwt.getSubjectFromToken(token);
     }
 
     @Override
@@ -75,12 +74,12 @@ public class UserService implements UserServicePort {
     }
 
     private String createToken(String username) {
-        return jwtPort.createTokenFromUsername(username);
+        return jwt.createTokenFromUsername(username);
     }
 
     @Override
     public Mono<UserDto> loginUser(UserDto userDto) {
-        return userRepositoryPort.getUserByUsername(userDto.username())
+        return userRepository.getUserByUsername(userDto.username())
                 .flatMap(dto -> checkPasswordMatches(dto, userDto))
                 .switchIfEmpty(Mono.error(new BadLoginException()));
     }
@@ -93,7 +92,7 @@ public class UserService implements UserServicePort {
     }
 
     private boolean passwordNotMatch(String basePassword, String requestPassword) {
-        return !encoderPort.passwordMatches(requestPassword, basePassword);
+        return !encoder.passwordMatches(requestPassword, basePassword);
     }
 
 }

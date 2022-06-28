@@ -4,7 +4,7 @@ import com.revo.projectservice.domain.dto.ProjectDto;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public interface ProjectRepositoryPort {
+public interface ProjectRepository {
 
     Flux<ProjectDto> getAllProjectsByOwner(String owner);
     Mono<ProjectDto> getProjectByOwner(String id, String owner);

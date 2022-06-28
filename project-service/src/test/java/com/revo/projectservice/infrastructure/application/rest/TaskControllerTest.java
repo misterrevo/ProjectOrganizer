@@ -4,7 +4,7 @@ import com.revo.projectservice.domain.dto.RestTaskDto;
 import com.revo.projectservice.domain.dto.TaskDto;
 import com.revo.projectservice.domain.exception.NoPermissionException;
 import com.revo.projectservice.domain.exception.TaskDateOutOfRangeInProject;
-import com.revo.projectservice.domain.port.TaskServicePort;
+import com.revo.projectservice.domain.port.TaskService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ class TaskControllerTest {
     private WebTestClient webTestClient;
 
     @MockBean
-    private TaskServicePort taskServicePort;
+    private TaskService taskService;
 
     private final TaskDto taskDto = TaskDto.Builder.aTaskDto()
             .name(TASK_NAME)
@@ -47,7 +47,7 @@ class TaskControllerTest {
     void shouldReturn201WhileCreatingTask() {
         //given
         //when
-        when(taskServicePort.createTaskByTokenAndProjectId(anyString(), anyString(), any(RestTaskDto.class))).thenReturn(Mono.just(taskDto));
+        when(taskService.createTaskByTokenAndProjectId(anyString(), anyString(), any(RestTaskDto.class))).thenReturn(Mono.just(taskDto));
         //then
         webTestClient
                 .post()
@@ -62,7 +62,7 @@ class TaskControllerTest {
     void shouldReturn400WhileCreatingTask(){
         //given
         //when
-        when(taskServicePort.createTaskByTokenAndProjectId(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new TaskDateOutOfRangeInProject()));
+        when(taskService.createTaskByTokenAndProjectId(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new TaskDateOutOfRangeInProject()));
         //then
         webTestClient
                 .post()
@@ -77,7 +77,7 @@ class TaskControllerTest {
     void shouldReturn401WhileCreatingTask(){
         //given
         //when
-        when(taskServicePort.createTaskByTokenAndProjectId(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new NoPermissionException()));
+        when(taskService.createTaskByTokenAndProjectId(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new NoPermissionException()));
         //then
         webTestClient
                 .post()
@@ -91,7 +91,7 @@ class TaskControllerTest {
     void shouldReturn200WhileEditingTask() {
         //given
         //when
-        when(taskServicePort.editTaskByTokenAndId(anyString(), anyString(), any(RestTaskDto.class))).thenReturn(Mono.just(taskDto));
+        when(taskService.editTaskByTokenAndId(anyString(), anyString(), any(RestTaskDto.class))).thenReturn(Mono.just(taskDto));
         //then
         webTestClient
                 .patch()
@@ -106,7 +106,7 @@ class TaskControllerTest {
     void shouldReturn400WhileEditingTask(){
         //given
         //when
-        when(taskServicePort.editTaskByTokenAndId(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new TaskDateOutOfRangeInProject()));
+        when(taskService.editTaskByTokenAndId(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new TaskDateOutOfRangeInProject()));
         //then
         webTestClient
                 .patch()
@@ -121,7 +121,7 @@ class TaskControllerTest {
     void shouldReturn401WhileEditingTask(){
         //given
         //when
-        when(taskServicePort.editTaskByTokenAndId(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new NoPermissionException()));
+        when(taskService.editTaskByTokenAndId(anyString(),anyString(),any(RestTaskDto.class))).thenReturn(Mono.error(new NoPermissionException()));
         //then
         webTestClient
                 .patch()
@@ -136,7 +136,7 @@ class TaskControllerTest {
     void shouldReturn200WhileDeletingTask() {
         //given
         //when
-        when(taskServicePort.deleteTaskByTokenAndId(anyString(), anyString())).thenReturn(Mono.just(taskDto));
+        when(taskService.deleteTaskByTokenAndId(anyString(), anyString())).thenReturn(Mono.just(taskDto));
         //then
         webTestClient
                 .delete()
@@ -149,7 +149,7 @@ class TaskControllerTest {
     void shouldReturn401WhileDeletingTask() {
         //given
         //when
-        when(taskServicePort.deleteTaskByTokenAndId(anyString(), anyString())).thenReturn(Mono.error(new NoPermissionException()));
+        when(taskService.deleteTaskByTokenAndId(anyString(), anyString())).thenReturn(Mono.error(new NoPermissionException()));
         //then
         webTestClient
                 .delete()

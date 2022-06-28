@@ -3,7 +3,7 @@ package com.revo.authservice.infrastructure.application.rest;
 import com.revo.authservice.domain.dto.UserDto;
 import com.revo.authservice.domain.exception.BadLoginException;
 import com.revo.authservice.domain.exception.UsernameInUseException;
-import com.revo.authservice.domain.port.UserServicePort;
+import com.revo.authservice.domain.port.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ class AuthControllerTest {
     private WebTestClient webTestClient;
 
     @MockBean
-    private UserServicePort userServicePort;
+    private UserService userService;
 
     private final UserDto userDto = new UserDto(null, "test", "test", "test@email.pl");
 
@@ -40,7 +40,7 @@ class AuthControllerTest {
     void shouldReturn200WhileLoggingUser() {
         //given
         //when
-        when(userServicePort.loginUser(any(UserDto.class))).thenReturn(Mono.just(userDto));
+        when(userService.loginUser(any(UserDto.class))).thenReturn(Mono.just(userDto));
         //then
         webTestClient
                 .post()
@@ -54,7 +54,7 @@ class AuthControllerTest {
     void shouldReturn401WhileLoggingUser() {
         //given
         //when
-        when(userServicePort.loginUser(any(UserDto.class))).thenReturn(Mono.error(new BadLoginException()));
+        when(userService.loginUser(any(UserDto.class))).thenReturn(Mono.error(new BadLoginException()));
         //then
         webTestClient
                 .post()
@@ -68,7 +68,7 @@ class AuthControllerTest {
     void shouldReturn201WhileRegisteringUser() {
         //given
         //when
-        when(userServicePort.createUser(any(UserDto.class))).thenReturn(Mono.just(userDto));
+        when(userService.createUser(any(UserDto.class))).thenReturn(Mono.just(userDto));
         //then
         webTestClient
                 .post()
@@ -82,7 +82,7 @@ class AuthControllerTest {
     void shouldReturn400WhileRegisteringUser() {
         //given
         //when
-        when(userServicePort.createUser(any(UserDto.class))).thenReturn(Mono.error(new UsernameInUseException(USERNAME_IN_USE)));
+        when(userService.createUser(any(UserDto.class))).thenReturn(Mono.error(new UsernameInUseException(USERNAME_IN_USE)));
         //then
         webTestClient
                 .post()
@@ -96,7 +96,7 @@ class AuthControllerTest {
     void shouldReturn200WhileTranslatingTokenOnUser() {
         //given
         //when
-        when(userServicePort.getUserFromToken(anyString())).thenReturn(Mono.just(userDto));
+        when(userService.getUserFromToken(anyString())).thenReturn(Mono.just(userDto));
         //then
         webTestClient
                 .post()
@@ -110,7 +110,7 @@ class AuthControllerTest {
     void shouldReturn401WhileTranslatingTokenOnUser() {
         //given
         //when
-        when(userServicePort.getUserFromToken(anyString())).thenReturn(Mono.error(new BadLoginException()));
+        when(userService.getUserFromToken(anyString())).thenReturn(Mono.error(new BadLoginException()));
         //then
         webTestClient
                 .post()

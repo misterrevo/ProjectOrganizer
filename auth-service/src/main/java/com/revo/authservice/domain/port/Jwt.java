@@ -1,6 +1,6 @@
 package com.revo.authservice.domain.port;
 
-public interface JwtPort {
+public interface Jwt {
     String createTokenFromUsername(String username);
     String getSubjectFromToken(String token);
 }

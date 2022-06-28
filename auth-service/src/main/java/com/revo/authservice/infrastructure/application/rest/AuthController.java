@@ -1,12 +1,10 @@
 package com.revo.authservice.infrastructure.application.rest;
 
 import com.revo.authservice.domain.dto.UserDto;
-import com.revo.authservice.domain.port.UserServicePort;
+import com.revo.authservice.domain.port.UserService;
 import com.revo.authservice.infrastructure.application.rest.dto.LoginDto;
 import com.revo.authservice.infrastructure.application.rest.dto.RegisterDto;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -23,32 +21,32 @@ class AuthController {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String AUTHORIZATION_HEADER_PREFIX = "Bearer ";
     private static final String USERS_LOCATION = "None";
-    private final UserServicePort userServicePort;
+    private final UserService userService;
 
-    AuthController(UserServicePort userServicePort) {
-        this.userServicePort = userServicePort;
+    AuthController(UserService userService) {
+        this.userService = userService;
     }
 
     @PostMapping("/login")
     Mono<ResponseEntity<UserDto>> loginUser(@RequestBody Mono<LoginDto> loginDto){
         return loginDto
                 .map(Mapper::fromLogin)
-                .flatMap(dto -> userServicePort.loginUser(dto))
-                .map(dto -> ResponseEntity.ok().header(AUTHORIZATION_HEADER, userServicePort.getTokenFromUsername(dto.username())).body(dto));
+                .flatMap(dto -> userService.loginUser(dto))
+                .map(dto -> ResponseEntity.ok().header(AUTHORIZATION_HEADER, userService.getTokenFromUsername(dto.username())).body(dto));
     }
 
     @PostMapping("/register")
     Mono<ResponseEntity<UserDto>> registerUser(@RequestBody Mono<RegisterDto> registerDto){
         return registerDto
                 .map(Mapper::fromRegister)
-                .flatMap(dto -> userServicePort.createUser(dto))
+                .flatMap(dto -> userService.createUser(dto))
                 .map(dto -> ResponseEntity.created(URI.create(USERS_LOCATION)).body(dto));
     }
 
     @PostMapping("/authorize")
     Mono<ResponseEntity<UserDto>> translateTokenOnUser(@RequestHeader(AUTHORIZATION_HEADER) String token){
         return Mono.just(token)
-                .flatMap(target -> userServicePort.getUserFromToken(target))
+                .flatMap(target -> userService.getUserFromToken(target))
                 .map(dto -> ResponseEntity.ok(dto));
     }
 }

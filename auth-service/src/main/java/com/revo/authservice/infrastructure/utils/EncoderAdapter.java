@@ -1,11 +1,11 @@
 package com.revo.authservice.infrastructure.utils;
 
-import com.revo.authservice.domain.port.EncoderPort;
+import com.revo.authservice.domain.port.Encoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-class EncoderAdapter implements EncoderPort {
+class EncoderAdapter implements Encoder {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 

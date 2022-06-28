@@ -1,10 +1,10 @@
 package com.revo.authservice.infrastructure.application.config;
 
-import com.revo.authservice.domain.UserService;
-import com.revo.authservice.domain.port.EncoderPort;
-import com.revo.authservice.domain.port.JwtPort;
-import com.revo.authservice.domain.port.UserRepositoryPort;
-import com.revo.authservice.domain.port.UserServicePort;
+import com.revo.authservice.domain.UserServiceImp;
+import com.revo.authservice.domain.port.Encoder;
+import com.revo.authservice.domain.port.Jwt;
+import com.revo.authservice.domain.port.UserRepository;
+import com.revo.authservice.domain.port.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,7 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 class BeanConfiguration {
 
     @Bean
-    public UserServicePort createUserServiceBean(UserRepositoryPort userRepositoryPort, JwtPort jwtPort, EncoderPort encoderPort){
-        return new UserService(userRepositoryPort, jwtPort, encoderPort);
+    public UserService createUserServiceBean(UserRepository userRepository, Jwt jwt, Encoder encoder){
+        return new UserServiceImp(userRepository, jwt, encoder);
     }
 }

@@ -1,7 +1,7 @@
 package com.revo.projectservice.infrastructure.database;
 
 import com.revo.projectservice.domain.dto.ProjectDto;
-import com.revo.projectservice.domain.port.ProjectRepositoryPort;
+import com.revo.projectservice.domain.port.ProjectRepository;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -9,12 +9,11 @@ import reactor.core.publisher.Mono;
 import static com.revo.projectservice.infrastructure.database.EntityMapper.Mapper;
 
 @Component
-public
-class ProjectRepositoryAdapter implements ProjectRepositoryPort {
+class ProjectRepositoryAdapter implements ProjectRepository {
 
-    private final ProjectRepository projectRepository;
+    private final com.revo.projectservice.infrastructure.database.ProjectRepository projectRepository;
 
-    ProjectRepositoryAdapter(ProjectRepository projectRepository) {
+    ProjectRepositoryAdapter(com.revo.projectservice.infrastructure.database.ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
     }
 

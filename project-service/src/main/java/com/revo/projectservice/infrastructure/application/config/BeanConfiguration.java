@@ -1,7 +1,7 @@
 package com.revo.projectservice.infrastructure.application.config;
 
 import com.revo.projectservice.domain.Service;
-import com.revo.projectservice.domain.port.ProjectRepositoryPort;
+import com.revo.projectservice.domain.port.ProjectRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -13,8 +13,8 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 class BeanConfiguration {
 
     @Bean
-    public Service createServiceBean(ProjectRepositoryPort projectRepositoryPort){
-        return new Service(projectRepositoryPort);
+    public Service createServiceBean(ProjectRepository projectRepository){
+        return new Service(projectRepository);
     }
 
 }

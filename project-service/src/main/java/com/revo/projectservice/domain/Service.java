@@ -8,9 +8,9 @@ import com.revo.projectservice.domain.exception.NoPermissionException;
 import com.revo.projectservice.domain.exception.NoTaskFoundException;
 import com.revo.projectservice.domain.exception.ProjectNotFoundException;
 import com.revo.projectservice.domain.exception.TaskDateOutOfRangeInProject;
-import com.revo.projectservice.domain.port.ProjectRepositoryPort;
-import com.revo.projectservice.domain.port.ProjectServicePort;
-import com.revo.projectservice.domain.port.TaskServicePort;
+import com.revo.projectservice.domain.port.ProjectRepository;
+import com.revo.projectservice.domain.port.ProjectService;
+import com.revo.projectservice.domain.port.TaskService;
 import com.revo.projectservice.domain.vo.UserVO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -20,14 +20,14 @@ import reactor.core.publisher.Mono;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Service implements ProjectServicePort, TaskServicePort {
+public class Service implements ProjectService, TaskService {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String GATEWAY_HOST = "http://localhost:8080";
-    private final ProjectRepositoryPort projectRepositoryPort;
+    private final ProjectRepository projectRepositoryPort;
     private static final String TRANSLATE_TOKEN_PATH = "/authorize";
 
-    public Service(ProjectRepositoryPort projectRepositoryPort) {
+    public Service(ProjectRepository projectRepositoryPort) {
         this.projectRepositoryPort = projectRepositoryPort;
     }
 

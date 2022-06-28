@@ -5,7 +5,7 @@ import com.revo.projectservice.domain.dto.ProjectDto;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public interface ProjectServicePort {
+public interface ProjectService {
     Flux<ProjectDto> getAllProjectsByToken(String token);
     Mono<ProjectDto> getProjectByTokenAndId(String token, String id);
     Mono<ProjectDto> createProjectByToken(String token, RestProjectDto projectDto);

@@ -1,18 +1,18 @@
 package com.revo.authservice.infrastructure.database;
 
 import com.revo.authservice.domain.dto.UserDto;
-import com.revo.authservice.domain.port.UserRepositoryPort;
+import com.revo.authservice.domain.port.UserRepository;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import static com.revo.authservice.infrastructure.database.UserMapper.Mapper;
 
 @Component
-class UserRepositoryAdapter implements UserRepositoryPort {
+class UserRepositoryAdapter implements UserRepository {
 
-    private final UserRepository userRepository;
+    private final com.revo.authservice.infrastructure.database.UserRepository userRepository;
 
-    UserRepositoryAdapter(UserRepository userRepository) {
+    UserRepositoryAdapter(com.revo.authservice.infrastructure.database.UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
