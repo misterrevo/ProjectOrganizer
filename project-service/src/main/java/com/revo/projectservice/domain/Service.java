@@ -12,6 +12,7 @@ import com.revo.projectservice.domain.port.ProjectRepositoryPort;
 import com.revo.projectservice.domain.port.ProjectServicePort;
 import com.revo.projectservice.domain.port.TaskServicePort;
 import com.revo.projectservice.domain.vo.UserVO;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -42,7 +43,8 @@ public class Service implements ProjectServicePort, TaskServicePort {
                 .post()
                 .uri(TRANSLATE_TOKEN_PATH)
                 .header(AUTHORIZATION_HEADER, token)
-                .retrieve();
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new NoPermissionException()));
     }
 
     @Override
