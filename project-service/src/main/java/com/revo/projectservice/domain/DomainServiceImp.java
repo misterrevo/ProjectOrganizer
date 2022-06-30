@@ -13,12 +13,14 @@ import com.revo.projectservice.domain.port.ProjectService;
 import com.revo.projectservice.domain.port.TaskService;
 import com.revo.projectservice.domain.vo.UserVO;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Function;
 
 import static com.revo.projectservice.domain.Mapper.mapProjectDtoFromRestDto;
 
@@ -37,7 +39,11 @@ public class DomainServiceImp implements ProjectService, TaskService {
     public Flux<ProjectDto> getAllProjectsByToken(String token) {
         return getUserFromAuthServiceAsResponse(token)
                 .bodyToFlux(UserVO.class)
-                .flatMap(user -> projectRepositoryPort.getAllProjectsByOwner(user.getUsername()));
+                .flatMap(user -> getAllProjectsByOwner(user));
+    }
+
+    private Flux<ProjectDto> getAllProjectsByOwner(UserVO user) {
+        return projectRepositoryPort.getAllProjectsByOwner(user.getUsername());
     }
 
     private WebClient.ResponseSpec getUserFromAuthServiceAsResponse(String token) {
@@ -46,7 +52,11 @@ public class DomainServiceImp implements ProjectService, TaskService {
                 .uri(TRANSLATE_TOKEN_PATH)
                 .header(AUTHORIZATION_HEADER, token)
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(new NoPermissionException()));
+                .onStatus(HttpStatus::is4xxClientError, throwNoPermissionException());
+    }
+
+    private Function<ClientResponse, Mono<? extends Throwable>> throwNoPermissionException() {
+        return clientResponse -> Mono.error(new NoPermissionException());
     }
 
     @Override
@@ -54,7 +64,11 @@ public class DomainServiceImp implements ProjectService, TaskService {
         return getUserFromAuthServiceAsResponse(token)
                 .bodyToMono(UserVO.class)
                 .flatMap(user -> getProjectByOwnerAndId(id, user))
-                .switchIfEmpty(Mono.error(new ProjectNotFoundException(id)));
+                .switchIfEmpty(getProjectNotFundExceptionError(id));
+    }
+
+    private Mono<ProjectDto> getProjectNotFundExceptionError(String id) {
+        return Mono.error(new ProjectNotFoundException(id));
     }
 
     @Override
@@ -80,7 +94,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
     }
 
     private Mono<ProjectDto> deleteProjectByIdAndUser(String id, UserVO user) {
-        return projectRepositoryPort.deleteProject(id, user.getUsername());
+        return deleteProjectByIdAndOwner(id, user);
     }
 
     @Override
@@ -102,7 +116,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
                     return getProjectByOwnerAndId(projectId, user)
                             .flatMap(projectDto -> {
                                 if (isNotInProjectTimestamp(requestTaskDto, projectDto)) {
-                                    return Mono.error(new TaskDateOutOfRangeInProject());
+                                    return getTaskDateOutOfRangeInProjectError();
                                 }
                                 TaskDto taskDto = Mapper.mapTaskDtoFromRestDto(requestTaskDto);
                                 taskDto.setId(generateId());
@@ -112,6 +126,10 @@ public class DomainServiceImp implements ProjectService, TaskService {
                                 return Mono.just(taskDto);
                             });
                 });
+    }
+
+    private Mono<TaskDto> getTaskDateOutOfRangeInProjectError() {
+        return Mono.error(new TaskDateOutOfRangeInProject());
     }
 
     private boolean isNotInProjectTimestamp(RequestTaskDto requestTaskDto, ProjectDto projectDto) {
@@ -133,7 +151,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
                 .flatMap(user -> {
                     return Mono.from(getAllProjectsByOwner(user.getUsername()).flatMap(projectDto -> {
                         if (isNotInProjectTimestamp(requestTaskDto, projectDto)) {
-                            return Mono.error(new TaskDateOutOfRangeInProject());
+                            return getTaskDateOutOfRangeInProjectError();
                         }
                         for (TaskDto taskDto : projectDto.getTasks()) {
                             if (isCurrentTask(id, taskDto)) {
@@ -142,9 +160,13 @@ public class DomainServiceImp implements ProjectService, TaskService {
                                 return Mono.just(taskDto);
                             }
                         }
-                        return Mono.error(new NoTaskFoundException());
+                        return getNoTaskFoundError();
                     }));
                 });
+    }
+
+    private Mono<TaskDto> getNoTaskFoundError() {
+        return Mono.error(new NoTaskFoundException());
     }
 
     private boolean isCurrentTask(String id, TaskDto taskDto) {
@@ -170,12 +192,16 @@ public class DomainServiceImp implements ProjectService, TaskService {
                     return Mono.from(getAllProjectsByOwner(user.getUsername())).flatMap(projectDto -> {
                         for (TaskDto taskDto : projectDto.getTasks()) {
                             if (Objects.equals(taskDto.getId(), id)) {
-                                projectRepositoryPort.deleteProject(id, user.getUsername());
+                                deleteProjectByIdAndOwner(id, user);
                                 return Mono.just(taskDto);
                             }
                         }
-                        return Mono.error(new NoTaskFoundException());
+                        return getNoTaskFoundError();
                     });
                 });
+    }
+
+    private Mono<ProjectDto> deleteProjectByIdAndOwner(String id, UserVO user) {
+        return projectRepositoryPort.deleteProject(id, user.getUsername());
     }
 }
