@@ -52,7 +52,7 @@ class TaskControllerTest {
         webTestClient
                 .post()
                 .uri(TASK_END_POINT)
-                .bodyValue(taskDto)
+                .bodyValue(mapOnRequestTaskDto(taskDto))
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
                 .exchange()
                 .expectStatus().isCreated();
@@ -67,7 +67,7 @@ class TaskControllerTest {
         webTestClient
                 .post()
                 .uri(TASK_END_POINT)
-                .bodyValue(taskDto)
+                .bodyValue(mapOnRequestTaskDto(taskDto))
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
                 .exchange()
                 .expectStatus().isBadRequest();
@@ -82,7 +82,7 @@ class TaskControllerTest {
         webTestClient
                 .post()
                 .uri(TASK_END_POINT)
-                .bodyValue(taskDto)
+                .bodyValue(mapOnRequestTaskDto(taskDto))
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
                 .exchange()
                 .expectStatus().isUnauthorized();
@@ -96,7 +96,7 @@ class TaskControllerTest {
         webTestClient
                 .patch()
                 .uri(TASK_END_POINT)
-                .bodyValue(taskDto)
+                .bodyValue(mapOnRequestTaskDto(taskDto))
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
                 .exchange()
                 .expectStatus().isOk();
@@ -111,7 +111,7 @@ class TaskControllerTest {
         webTestClient
                 .patch()
                 .uri(TASK_END_POINT)
-                .bodyValue(taskDto)
+                .bodyValue(mapOnRequestTaskDto(taskDto))
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
                 .exchange()
                 .expectStatus().isBadRequest();
@@ -126,7 +126,7 @@ class TaskControllerTest {
         webTestClient
                 .patch()
                 .uri(TASK_END_POINT)
-                .bodyValue(taskDto)
+                .bodyValue(mapOnRequestTaskDto(taskDto))
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
                 .exchange()
                 .expectStatus().isUnauthorized();
@@ -157,5 +157,9 @@ class TaskControllerTest {
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
                 .exchange()
                 .expectStatus().isUnauthorized();
+    }
+    
+    private RequestTaskDto mapOnRequestTaskDto(TaskDto taskDto){
+        return new RequestTaskDto(taskDto.getName(), taskDto.getDescription(), taskDto.getStartDate(), taskDto.getEndDate());
     }
 }
