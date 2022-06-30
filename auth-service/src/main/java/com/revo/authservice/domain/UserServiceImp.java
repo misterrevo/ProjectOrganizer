@@ -7,11 +7,12 @@ import com.revo.authservice.domain.exception.UsernameInUseException;
 import com.revo.authservice.domain.port.Encoder;
 import com.revo.authservice.domain.port.Jwt;
 import com.revo.authservice.domain.port.UserRepository;
+import com.revo.authservice.domain.port.UserService;
 import reactor.core.publisher.Mono;
 
 import java.util.function.Function;
 
-public class UserServiceImp implements com.revo.authservice.domain.port.UserService {
+public class UserServiceImp implements UserService {
 
     private final UserRepository userRepository;
     private final Jwt jwt;
@@ -46,12 +47,14 @@ public class UserServiceImp implements com.revo.authservice.domain.port.UserServ
 
     private Mono<Boolean> checkUserExistsByUsername(String username) {
         return existsByUsernameMono(username)
-                .flatMap(existsByUsernameBoolean -> {
-                    if(existsByUsernameBoolean){
-                        return getUsernameInUseError(username);
-                    }
-                    return Mono.just(existsByUsernameBoolean);
-                });
+                .flatMap(existsByUsernameBoolean -> getMonoBoleanOrError(existsByUsernameBoolean, getUsernameInUseError(username)));
+    }
+
+    private Mono<Boolean> getMonoBoleanOrError(Boolean existsByUsernameBoolean, Mono<Boolean> username) {
+        if(existsByUsernameBoolean){
+            return username;
+        }
+        return Mono.just(existsByUsernameBoolean);
     }
 
     private Mono<Boolean> existsByUsernameMono(String username) {
@@ -64,12 +67,7 @@ public class UserServiceImp implements com.revo.authservice.domain.port.UserServ
 
     private Mono<Boolean> checkUserExistsByEmail(String email) {
         return existsByEmailMono(email)
-                .flatMap(existsByEmailBoolean -> {
-                    if(existsByEmailBoolean){
-                        return getEmailInUseError(email);
-                    }
-                    return Mono.just(existsByEmailBoolean);
-                });
+                .flatMap(existsByEmailBoolean -> getMonoBoleanOrError(existsByEmailBoolean, getEmailInUseError(email)));
     }
 
     private Mono<Boolean> getEmailInUseError(String email) {
