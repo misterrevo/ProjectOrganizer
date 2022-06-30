@@ -10,5 +10,5 @@ public interface ProjectService {
     Mono<ProjectDto> getProjectByTokenAndId(String token, String id);
     Mono<ProjectDto> createProjectByToken(String token, RequestProjectDto projectDto);
     Mono<ProjectDto> deleteProjectByTokenAndId(String token, String id);
-    Mono<ProjectDto> editProjectByTokenAndId(String token, String id, RequestProjectDto projectDto);
+    Mono<ProjectDto> editProjectByTokenAndId(String token, RequestProjectDto projectDto);
 }

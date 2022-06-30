@@ -98,22 +98,21 @@ public class DomainServiceImp implements ProjectService, TaskService {
     }
 
     @Override
-    public Mono<ProjectDto> editProjectByTokenAndId(String token, String id, RequestProjectDto requestProjectDto) {
+    public Mono<ProjectDto> editProjectByTokenAndId(String token, RequestProjectDto requestProjectDto) {
         return getUserFromAuthServiceAsResponse(token)
                 .bodyToMono(UserVO.class)
                 .flatMap(user -> {
                     ProjectDto projectDto = mapProjectDtoFromRestDto(requestProjectDto);
-                    projectDto.setId(id);
                     return saveProjectDtoMono(projectDto);
                 });
     }
 
     @Override
-    public Mono<TaskDto> createTaskByTokenAndProjectId(String token, String projectId, RequestTaskDto requestTaskDto) {
+    public Mono<TaskDto> createTaskByTokenAndProjectId(String token, RequestTaskDto requestTaskDto) {
         return getUserFromAuthServiceAsResponse(token)
                 .bodyToMono(UserVO.class)
                 .flatMap(user -> {
-                    return getProjectByOwnerAndId(projectId, user)
+                    return getProjectByOwnerAndId(requestTaskDto.getProjectId(), user)
                             .flatMap(projectDto -> {
                                 if (isNotInProjectTimestamp(requestTaskDto, projectDto)) {
                                     return getTaskDateOutOfRangeInProjectError();
@@ -145,7 +144,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
     }
 
     @Override
-    public Mono<TaskDto> editTaskByTokenAndId(String token, String id, RequestTaskDto requestTaskDto) {
+    public Mono<TaskDto> editTaskByTokenAndId(String token, RequestTaskDto requestTaskDto) {
         return getUserFromAuthServiceAsResponse(token)
                 .bodyToMono(UserVO.class)
                 .flatMap(user -> {
@@ -153,7 +152,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
                         if (isNotInProjectTimestamp(requestTaskDto, projectDto)) {
                             return getTaskDateOutOfRangeInProjectError();
                         }
-                        return checkTaskIsInProjectAndUpdateOrGetError(id, requestTaskDto, projectDto);
+                        return checkTaskIsInProjectAndUpdateOrGetError(requestTaskDto.getId(), requestTaskDto, projectDto);
                     }));
                 });
     }

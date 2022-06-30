@@ -47,7 +47,7 @@ class TaskControllerTest {
     void shouldReturn201WhileCreatingTask() {
         //given
         //when
-        when(taskService.createTaskByTokenAndProjectId(anyString(), anyString(), any(RequestTaskDto.class))).thenReturn(Mono.just(taskDto));
+        when(taskService.createTaskByTokenAndProjectId(anyString(), any(RequestTaskDto.class))).thenReturn(Mono.just(taskDto));
         //then
         webTestClient
                 .post()
@@ -62,7 +62,7 @@ class TaskControllerTest {
     void shouldReturn400WhileCreatingTask(){
         //given
         //when
-        when(taskService.createTaskByTokenAndProjectId(anyString(),anyString(),any(RequestTaskDto.class))).thenReturn(Mono.error(new TaskDateOutOfRangeInProject()));
+        when(taskService.createTaskByTokenAndProjectId(anyString(), any(RequestTaskDto.class))).thenReturn(Mono.error(new TaskDateOutOfRangeInProject()));
         //then
         webTestClient
                 .post()
@@ -77,7 +77,7 @@ class TaskControllerTest {
     void shouldReturn401WhileCreatingTask(){
         //given
         //when
-        when(taskService.createTaskByTokenAndProjectId(anyString(),anyString(),any(RequestTaskDto.class))).thenReturn(Mono.error(new NoPermissionException()));
+        when(taskService.createTaskByTokenAndProjectId(anyString(), any(RequestTaskDto.class))).thenReturn(Mono.error(new NoPermissionException()));
         //then
         webTestClient
                 .post()
@@ -91,7 +91,7 @@ class TaskControllerTest {
     void shouldReturn200WhileEditingTask() {
         //given
         //when
-        when(taskService.editTaskByTokenAndId(anyString(), anyString(), any(RequestTaskDto.class))).thenReturn(Mono.just(taskDto));
+        when(taskService.editTaskByTokenAndId(anyString(), any(RequestTaskDto.class))).thenReturn(Mono.just(taskDto));
         //then
         webTestClient
                 .patch()
@@ -106,7 +106,7 @@ class TaskControllerTest {
     void shouldReturn400WhileEditingTask(){
         //given
         //when
-        when(taskService.editTaskByTokenAndId(anyString(),anyString(),any(RequestTaskDto.class))).thenReturn(Mono.error(new TaskDateOutOfRangeInProject()));
+        when(taskService.editTaskByTokenAndId(anyString(), any(RequestTaskDto.class))).thenReturn(Mono.error(new TaskDateOutOfRangeInProject()));
         //then
         webTestClient
                 .patch()
@@ -121,7 +121,7 @@ class TaskControllerTest {
     void shouldReturn401WhileEditingTask(){
         //given
         //when
-        when(taskService.editTaskByTokenAndId(anyString(),anyString(),any(RequestTaskDto.class))).thenReturn(Mono.error(new NoPermissionException()));
+        when(taskService.editTaskByTokenAndId(anyString(), any(RequestTaskDto.class))).thenReturn(Mono.error(new NoPermissionException()));
         //then
         webTestClient
                 .patch()
@@ -160,6 +160,6 @@ class TaskControllerTest {
     }
     
     private RequestTaskDto mapOnRequestTaskDto(TaskDto taskDto){
-        return new RequestTaskDto(taskDto.getName(), taskDto.getDescription(), taskDto.getStartDate(), taskDto.getEndDate());
+        return new RequestTaskDto(null, taskDto.getId(), taskDto.getName(), taskDto.getDescription(), taskDto.getStartDate(), taskDto.getEndDate());
     }
 }

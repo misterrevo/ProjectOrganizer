@@ -60,7 +60,7 @@ class ProjectController {
     @PatchMapping("/{id}")
     Mono<ResponseEntity<ProjectDto>> editProjectByTokenAndId(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id, @RequestBody Mono<RequestProjectDto> restProjectDtoMono){
         return restProjectDtoMono
-                .flatMap(requestProjectDto -> projectService.editProjectByTokenAndId(token, id, requestProjectDto))
+                .flatMap(requestProjectDto -> projectService.editProjectByTokenAndId(token, requestProjectDto.setIdAndReturn(id)))
                 .map(projectDto -> ResponseEntity.ok(projectDto));
     }
 }

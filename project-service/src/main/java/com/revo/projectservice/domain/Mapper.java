@@ -66,6 +66,7 @@ class Mapper {
 
     public static ProjectDto mapProjectDtoFromRestDto(RequestProjectDto projectDto) {
         return ProjectDto.Builder.aProjectDto()
+                .id(projectDto.getId())
                 .name(projectDto.getName())
                 .startDate(projectDto.getStartDate())
                 .endDate(projectDto.getEndDate())

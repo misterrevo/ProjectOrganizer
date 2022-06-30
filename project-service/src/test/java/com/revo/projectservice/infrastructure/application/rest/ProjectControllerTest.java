@@ -161,7 +161,7 @@ class ProjectControllerTest {
     void shouldReturn200WhileEditingProject() {
         //given
         //when
-        when(projectService.editProjectByTokenAndId(anyString(), anyString(), any(RequestProjectDto.class))).thenReturn(Mono.just(projectDto));
+        when(projectService.editProjectByTokenAndId(anyString(), any(RequestProjectDto.class))).thenReturn(Mono.just(projectDto));
         //then
         webTestClient
                 .patch()
@@ -176,7 +176,7 @@ class ProjectControllerTest {
     void shouldReturn401WhileEditingProject() {
         //given
         //when
-        when(projectService.editProjectByTokenAndId(anyString(), anyString(), any(RequestProjectDto.class))).thenReturn(Mono.error(new NoPermissionException()));
+        when(projectService.editProjectByTokenAndId(anyString(), any(RequestProjectDto.class))).thenReturn(Mono.error(new NoPermissionException()));
         //then
         webTestClient
                 .patch()
@@ -188,6 +188,6 @@ class ProjectControllerTest {
     }
     
     private RequestProjectDto mapOnRequestProjectDto(ProjectDto projectDto){
-        return new RequestProjectDto(projectDto.getName(), projectDto.getStartDate(), projectDto.getEndDate());
+        return new RequestProjectDto(projectDto.getId(), projectDto.getName(), projectDto.getStartDate(), projectDto.getEndDate());
     }
 }
