@@ -109,7 +109,7 @@ class ProjectControllerTest {
                 .post()
                 .uri(PROJECTS_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
-                .bodyValue(projectDto)
+                .bodyValue(mapOnRequestProjectDto(projectDto))
                 .exchange()
                 .expectStatus().isCreated();
     }
@@ -124,7 +124,7 @@ class ProjectControllerTest {
                 .post()
                 .uri(PROJECTS_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
-                .bodyValue(projectDto)
+                .bodyValue(mapOnRequestProjectDto(projectDto))
                 .exchange()
                 .expectStatus().isUnauthorized();
     }
@@ -167,7 +167,7 @@ class ProjectControllerTest {
                 .patch()
                 .uri(SINGLE_PROJECT_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
-                .bodyValue(projectDto)
+                .bodyValue(mapOnRequestProjectDto(projectDto))
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -182,8 +182,12 @@ class ProjectControllerTest {
                 .patch()
                 .uri(SINGLE_PROJECT_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
-                .bodyValue(projectDto)
+                .bodyValue(mapOnRequestProjectDto(projectDto))
                 .exchange()
                 .expectStatus().isUnauthorized();
+    }
+    
+    private RequestProjectDto mapOnRequestProjectDto(ProjectDto projectDto){
+        return new RequestProjectDto(projectDto.getName(), projectDto.getStartDate(), projectDto.getEndDate());
     }
 }
