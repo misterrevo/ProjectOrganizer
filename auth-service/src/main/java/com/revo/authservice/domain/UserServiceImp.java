@@ -47,10 +47,10 @@ public class UserServiceImp implements UserService {
 
     private Mono<Boolean> checkUserExistsByUsername(String username) {
         return existsByUsernameMono(username)
-                .flatMap(existsByUsernameBoolean -> getMonoBoleanOrError(existsByUsernameBoolean, getUsernameInUseError(username)));
+                .flatMap(existsByUsernameBoolean -> getMonoBooleanOrError(existsByUsernameBoolean, getUsernameInUseError(username)));
     }
 
-    private Mono<Boolean> getMonoBoleanOrError(Boolean existsByUsernameBoolean, Mono<Boolean> username) {
+    private Mono<Boolean> getMonoBooleanOrError(Boolean existsByUsernameBoolean, Mono<Boolean> username) {
         if(existsByUsernameBoolean){
             return username;
         }
@@ -67,7 +67,7 @@ public class UserServiceImp implements UserService {
 
     private Mono<Boolean> checkUserExistsByEmail(String email) {
         return existsByEmailMono(email)
-                .flatMap(existsByEmailBoolean -> getMonoBoleanOrError(existsByEmailBoolean, getEmailInUseError(email)));
+                .flatMap(existsByEmailBoolean -> getMonoBooleanOrError(existsByEmailBoolean, getEmailInUseError(email)));
     }
 
     private Mono<Boolean> getEmailInUseError(String email) {
