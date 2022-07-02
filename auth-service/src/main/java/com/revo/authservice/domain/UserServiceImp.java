@@ -30,7 +30,7 @@ public class UserServiceImp implements UserService {
         return checkUserExistsByEmail(userDto.email())
                 .then(checkUserExistsByUsername(userDto.username()))
                 .then(encodePassword(userDto))
-                .flatMap(targetUserDto -> saveUser(targetUserDto));
+                .flatMap(this::saveUser);
     }
 
     private Mono<UserDto> encodePassword(UserDto userDto) {

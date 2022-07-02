@@ -42,12 +42,12 @@ class TaskController {
     Mono<ResponseEntity<TaskDto>> editTaskByTokenAndId(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id, @RequestBody Mono<RequestTaskDto> restTaskDtoMono){
         return restTaskDtoMono
                 .flatMap(requestTaskDto -> taskService.editTaskByTokenAndId(token, requestTaskDto.setId(id)))
-                .map(taskDto -> ResponseEntity.ok(taskDto));
+                .map(ResponseEntity::ok);
     }
 
     @DeleteMapping("/{id}")
     Mono<ResponseEntity<TaskDto>> deleteTaskByTokenAndId(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id){
         return taskService.deleteTaskByTokenAndId(token, id)
-                .map(taskDto -> ResponseEntity.ok(taskDto));
+                .map(ResponseEntity::ok);
     }
 }

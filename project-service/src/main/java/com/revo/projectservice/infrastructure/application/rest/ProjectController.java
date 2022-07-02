@@ -54,13 +54,13 @@ class ProjectController {
     @DeleteMapping("/{id}")
     Mono<ResponseEntity<ProjectDto>> deleteProjectByTokenAndId(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id){
         return projectService.deleteProjectByTokenAndId(token, id)
-                .map(projectDto -> ResponseEntity.ok(projectDto));
+                .map(ResponseEntity::ok);
     }
 
     @PatchMapping("/{id}")
     Mono<ResponseEntity<ProjectDto>> editProjectByTokenAndId(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id, @RequestBody Mono<RequestProjectDto> restProjectDtoMono){
         return restProjectDtoMono
                 .flatMap(requestProjectDto -> projectService.editProjectByTokenAndId(token, requestProjectDto.setIdAndReturn(id)))
-                .map(projectDto -> ResponseEntity.ok(projectDto));
+                .map(ResponseEntity::ok);
     }
 }

@@ -39,7 +39,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
     public Flux<ProjectDto> getAllProjectsByToken(String token) {
         return getUserFromAuthServiceAsResponse(token)
                 .bodyToFlux(AuthorizedUser.class)
-                .flatMap(user -> getAllProjectsByOwner(user));
+                .flatMap(this::getAllProjectsByOwner);
     }
 
     private Flux<ProjectDto> getAllProjectsByOwner(AuthorizedUser user) {

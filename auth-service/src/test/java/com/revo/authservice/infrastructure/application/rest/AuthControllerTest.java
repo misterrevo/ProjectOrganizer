@@ -1,5 +1,6 @@
 package com.revo.authservice.infrastructure.application.rest;
 
+import com.revo.authservice.domain.dto.AuthorizedUser;
 import com.revo.authservice.domain.dto.UserDto;
 import com.revo.authservice.domain.exception.BadLoginException;
 import com.revo.authservice.domain.exception.UsernameInUseException;
@@ -27,6 +28,8 @@ class AuthControllerTest {
     private static final String AUTHORIZE_END_POINT = "/authorize";
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String EXAMPLE_TOKEN = "token";
+    private static final String TEST_NAME = "test";
+    private static final String TEST_EMAIL = "test@email.pl";
 
     @Autowired
     private WebTestClient webTestClient;
@@ -34,7 +37,8 @@ class AuthControllerTest {
     @MockBean
     private UserService userService;
 
-    private final UserDto userDto = new UserDto(null, "test", "test", "test@email.pl");
+    private final UserDto userDto = new UserDto(null, TEST_NAME, TEST_NAME, TEST_EMAIL);
+    private final AuthorizedUser authorizedUser = new AuthorizedUser(TEST_NAME);
 
     @Test
     void shouldReturn200WhileLoggingUser() {
@@ -96,7 +100,7 @@ class AuthControllerTest {
     void shouldReturn200WhileTranslatingTokenOnUser() {
         //given
         //when
-        when(userService.getUsernameFromToken(anyString())).thenReturn(Mono.just(userDto));
+        when(userService.getUsernameFromToken(anyString())).thenReturn(Mono.just(authorizedUser));
         //then
         webTestClient
                 .post()
