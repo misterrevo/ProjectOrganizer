@@ -1,8 +1,6 @@
 package com.revo.authservice.infrastructure.application.config;
 
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
-import org.springframework.boot.env.YamlPropertySourceLoader;
-import org.springframework.core.env.CompositePropertySource;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.support.EncodedResource;
@@ -14,8 +12,7 @@ import java.util.Properties;
 class YamlFactory implements PropertySourceFactory {
 
     @Override
-    public PropertySource<?> createPropertySource(String name, EncodedResource encodedResource)
-            throws IOException {
+    public PropertySource<?> createPropertySource(String name, EncodedResource encodedResource) {
         YamlPropertiesFactoryBean factory = new YamlPropertiesFactoryBean();
         factory.setResources(encodedResource.getResource());
         Properties properties = factory.getObject();

@@ -5,9 +5,9 @@ import java.time.LocalDateTime;
 public class RequestProjectDto {
 
     private String id;
-    private String name;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private final String name;
+    private final LocalDateTime startDate;
+    private final LocalDateTime endDate;
 
     public RequestProjectDto(String id, String name, LocalDateTime startDate, LocalDateTime endDate) {
         this.id = id;

@@ -6,10 +6,10 @@ public class RequestTaskDto {
 
     private String projectId;
     private String id;
-    private String name;
-    private String description;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private final String name;
+    private final String description;
+    private final LocalDateTime startDate;
+    private final LocalDateTime endDate;
 
     public RequestTaskDto(String projectId, String id, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
         this.projectId = projectId;

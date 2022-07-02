@@ -16,7 +16,6 @@ class Project {
     public Project(String id, String owner, String name, LocalDateTime startDate, LocalDateTime endDate, List<Task> tasks) {
         this.id = id;
         this.name = name;
-        this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
         this.tasks = tasks;

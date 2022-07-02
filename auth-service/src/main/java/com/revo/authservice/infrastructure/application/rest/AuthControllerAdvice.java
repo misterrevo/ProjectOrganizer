@@ -1,12 +1,8 @@
 package com.revo.authservice.infrastructure.application.rest;
 
-import com.auth0.jwt.exceptions.JWTCreationException;
-import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.revo.authservice.domain.exception.BadLoginException;
 import com.revo.authservice.domain.exception.EmailInUseException;
 import com.revo.authservice.domain.exception.UsernameInUseException;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

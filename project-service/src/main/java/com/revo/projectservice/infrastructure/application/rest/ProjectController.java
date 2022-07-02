@@ -35,13 +35,13 @@ class ProjectController {
     @GetMapping
     ResponseEntity<Flux<ProjectDto>> getAllProjectsByToken(@RequestHeader(AUTHORIZATION_HEADER) String token){
         return ResponseEntity.ok(Flux.just(token)
-                .flatMap(targetToken -> projectService.getAllProjectsByToken(targetToken)));
+                .flatMap(projectService::getAllProjectsByToken));
     }
 
     @GetMapping("/{id}")
     Mono<ResponseEntity<ProjectDto>> getProjectByTokenAndId(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id){
         return projectService.getProjectByTokenAndId(token, id)
-                .map(projectDto -> ResponseEntity.ok(projectDto));
+                .map(ResponseEntity::ok);
     }
 
     @PostMapping
