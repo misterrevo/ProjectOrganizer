@@ -8,6 +8,7 @@ import com.revo.authservice.domain.port.Jwt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.Date;
 
 @Component
@@ -15,7 +16,7 @@ class JwtImp implements Jwt {
 
     private static final String TOKEN_PREFIX = "Bearer ";
     private static final String TOKEN_REPLACEMENT = "";
-    private static JWTVerifier verifier;
+    private JWTVerifier verifier;
 
     @Value("${spring.security.jwt.secret}")
     private String secret;
@@ -33,7 +34,7 @@ class JwtImp implements Jwt {
     @Override
     public String getSubjectFromToken(String token) {
         try{
-            return getJwtVerifier()
+            return verifier
                     .verify(token.replace(TOKEN_PREFIX, TOKEN_REPLACEMENT))
                     .getSubject();
         } catch (Exception exception){
@@ -41,11 +42,10 @@ class JwtImp implements Jwt {
         }
     }
 
-    private JWTVerifier getJwtVerifier() {
-        if(verifier == null){
-            verifier = JWT.require(Algorithm.HMAC256(secret))
-                    .build();
-        }
-        return verifier;
+    @PostConstruct
+    void createJwtVerifier(){
+        verifier = JWT.require(Algorithm.HMAC256(secret))
+                .build();
     }
+
 }
