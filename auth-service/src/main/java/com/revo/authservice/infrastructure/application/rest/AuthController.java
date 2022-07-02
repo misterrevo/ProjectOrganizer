@@ -1,5 +1,6 @@
 package com.revo.authservice.infrastructure.application.rest;
 
+import com.revo.authservice.domain.dto.AuthorizedUser;
 import com.revo.authservice.domain.dto.UserDto;
 import com.revo.authservice.domain.port.UserService;
 import com.revo.authservice.infrastructure.application.rest.dto.LoginDto;
@@ -45,7 +46,7 @@ class AuthController {
     }
 
     @PostMapping("/authorize")
-    Mono<ResponseEntity<String>> translateTokenOnUser(@RequestHeader(AUTHORIZATION_HEADER) String token){
+    Mono<ResponseEntity<AuthorizedUser>> translateTokenOnUser(@RequestHeader(AUTHORIZATION_HEADER) String token){
         return Mono.just(token)
                 .flatMap(targetToken -> userService.getUsernameFromToken(targetToken))
                 .map(username -> ResponseEntity.ok(username));

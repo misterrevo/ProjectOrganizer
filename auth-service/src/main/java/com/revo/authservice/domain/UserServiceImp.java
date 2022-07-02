@@ -1,5 +1,6 @@
 package com.revo.authservice.domain;
 
+import com.revo.authservice.domain.dto.AuthorizedUser;
 import com.revo.authservice.domain.dto.UserDto;
 import com.revo.authservice.domain.exception.BadLoginException;
 import com.revo.authservice.domain.exception.EmailInUseException;
@@ -79,10 +80,10 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public Mono<String> getUsernameFromToken(String token) {
+    public Mono<AuthorizedUser> getUsernameFromToken(String token) {
         return userRepository
                 .getUserByUsername(getSubjectFromToken(token))
-                .map(userDto -> userDto.username());
+                .map(userDto -> new AuthorizedUser(userDto.username()));
     }
 
     private String getSubjectFromToken(String token) {
