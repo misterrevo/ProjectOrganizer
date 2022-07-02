@@ -17,8 +17,12 @@ class UserRepositoryImp implements UserRepository {
 
     @Override
     public Mono<UserDto> saveUser(UserDto userDto) {
-        return userRepository.save(Mapper.mapUserEntityFromDto(userDto))
+        return getSavedUserEntity(userDto)
                 .map(Mapper::mapUserEntityToDto);
+    }
+
+    private Mono<UserEntity> getSavedUserEntity(UserDto userDto) {
+        return userRepository.save(Mapper.mapUserEntityFromDto(userDto));
     }
 
     @Override
@@ -33,7 +37,11 @@ class UserRepositoryImp implements UserRepository {
 
     @Override
     public Mono<UserDto> getUserByUsername(String username) {
-        return userRepository.findByUsername(username)
+        return getUserEntityByUsername(username)
                 .map(Mapper::mapUserEntityToDto);
+    }
+
+    private Mono<UserEntity> getUserEntityByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

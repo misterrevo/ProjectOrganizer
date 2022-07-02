@@ -3,6 +3,7 @@ package com.revo.authservice.infrastructure.utils;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.revo.authservice.domain.exception.BadLoginException;
 import com.revo.authservice.domain.port.Jwt;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,12 +34,20 @@ class JwtImp implements Jwt {
     @Override
     public String getSubjectFromToken(String token) {
         try{
-            return verifier
-                    .verify(token.replace(TOKEN_PREFIX, TOKEN_REPLACEMENT))
+            return getDecodedJWT(token)
                     .getSubject();
         } catch (Exception exception){
             throw new BadLoginException();
         }
+    }
+
+    private DecodedJWT getDecodedJWT(String token) {
+        return verifier
+                .verify(removePrefixFromToken(token));
+    }
+
+    private String removePrefixFromToken(String token) {
+        return token.replace(TOKEN_PREFIX, TOKEN_REPLACEMENT);
     }
 
     @PostConstruct

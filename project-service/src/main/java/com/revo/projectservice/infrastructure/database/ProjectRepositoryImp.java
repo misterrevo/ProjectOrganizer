@@ -18,25 +18,41 @@ class ProjectRepositoryImp implements ProjectRepository {
 
     @Override
     public Flux<ProjectDto> getAllProjectsByOwner(String owner) {
-        return projectRepository.getAllByOwner(owner)
+        return getAllByOwner(owner)
                 .map(Mapper::mapProjectEntityToDto);
+    }
+
+    private Flux<ProjectEntity> getAllByOwner(String owner) {
+        return projectRepository.getAllByOwner(owner);
     }
 
     @Override
     public Mono<ProjectDto> getProjectByOwner(String id, String owner) {
-        return projectRepository.getByOwnerAndId(owner, id)
+        return getByOwnerAndId(id, owner)
                 .map(Mapper::mapProjectEntityToDto);
+    }
+
+    private Mono<ProjectEntity> getByOwnerAndId(String id, String owner) {
+        return projectRepository.getByOwnerAndId(owner, id);
     }
 
     @Override
     public Mono<ProjectDto> saveProject(ProjectDto projectDto) {
-        return projectRepository.save(Mapper.mapProjectDtoToEntity(projectDto))
+        return getSavedProjectEntity(projectDto)
                 .map(Mapper::mapProjectEntityToDto);
+    }
+
+    private Mono<ProjectEntity> getSavedProjectEntity(ProjectDto projectDto) {
+        return projectRepository.save(Mapper.mapProjectDtoToEntity(projectDto));
     }
 
     @Override
     public Mono<ProjectDto> deleteProject(String id, String owner) {
-        return projectRepository.deleteById(id)
+        return deleteById(id)
                 .then(getProjectByOwner(id, owner));
+    }
+
+    private Mono<Void> deleteById(String id) {
+        return projectRepository.deleteById(id);
     }
 }
