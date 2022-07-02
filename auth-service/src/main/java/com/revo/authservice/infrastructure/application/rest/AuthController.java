@@ -5,6 +5,7 @@ import com.revo.authservice.domain.dto.UserDto;
 import com.revo.authservice.domain.port.UserService;
 import com.revo.authservice.infrastructure.application.rest.dto.LoginDto;
 import com.revo.authservice.infrastructure.application.rest.dto.RegisterDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +21,6 @@ import static com.revo.authservice.infrastructure.application.rest.DtoMapper.Map
 class AuthController {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String USERS_LOCATION = "None";
     private final UserService userService;
 
     AuthController(UserService userService) {
@@ -40,7 +40,7 @@ class AuthController {
         return registerDto
                 .map(Mapper::fromRegister)
                 .flatMap(userService::createUser)
-                .map(userDto -> ResponseEntity.created(URI.create(USERS_LOCATION)).body(userDto));
+                .map(userDto -> ResponseEntity.status(HttpStatus.CREATED).body(userDto));
     }
 
     @PostMapping("/authorize")
