@@ -1,7 +1,7 @@
 package com.revo.authservice.infrastructure.application.rest;
 
 import com.revo.authservice.domain.dto.AuthorizedUser;
-import com.revo.authservice.domain.dto.UserDto;
+import com.revo.authservice.domain.User;
 import com.revo.authservice.domain.exception.BadLoginException;
 import com.revo.authservice.domain.exception.UsernameInUseException;
 import com.revo.authservice.domain.port.UserService;
@@ -36,19 +36,19 @@ class AuthControllerTest {
     @MockBean
     private UserService userService;
 
-    private final UserDto userDto = new UserDto(null, TEST_NAME, TEST_NAME, TEST_EMAIL);
+    private final User user = new User(null, TEST_NAME, TEST_NAME, TEST_EMAIL);
     private final AuthorizedUser authorizedUser = new AuthorizedUser(TEST_NAME);
 
     @Test
     void shouldReturn200WhileLoggingUser() {
         //given
         //when
-        when(userService.loginUser(any(UserDto.class))).thenReturn(Mono.just(userDto));
+        when(userService.loginUser(any(User.class))).thenReturn(Mono.just(user));
         //then
         webTestClient
                 .post()
                 .uri(LOGIN_END_POINT)
-                .bodyValue(userDto)
+                .bodyValue(user)
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -57,12 +57,12 @@ class AuthControllerTest {
     void shouldReturn401WhileLoggingUser() {
         //given
         //when
-        when(userService.loginUser(any(UserDto.class))).thenReturn(Mono.error(new BadLoginException()));
+        when(userService.loginUser(any(User.class))).thenReturn(Mono.error(new BadLoginException()));
         //then
         webTestClient
                 .post()
                 .uri(LOGIN_END_POINT)
-                .bodyValue(userDto)
+                .bodyValue(user)
                 .exchange()
                 .expectStatus().isUnauthorized();
     }
@@ -71,12 +71,12 @@ class AuthControllerTest {
     void shouldReturn201WhileRegisteringUser() {
         //given
         //when
-        when(userService.createUser(any(UserDto.class))).thenReturn(Mono.just(userDto));
+        when(userService.createUser(any(User.class))).thenReturn(Mono.just(user));
         //then
         webTestClient
                 .post()
                 .uri(REGISTER_END_POINT)
-                .bodyValue(userDto)
+                .bodyValue(user)
                 .exchange()
                 .expectStatus().isCreated();
     }
@@ -85,12 +85,12 @@ class AuthControllerTest {
     void shouldReturn400WhileRegisteringUser() {
         //given
         //when
-        when(userService.createUser(any(UserDto.class))).thenReturn(Mono.error(new UsernameInUseException(USERNAME_IN_USE)));
+        when(userService.createUser(any(User.class))).thenReturn(Mono.error(new UsernameInUseException(USERNAME_IN_USE)));
         //then
         webTestClient
                 .post()
                 .uri(REGISTER_END_POINT)
-                .bodyValue(userDto)
+                .bodyValue(user)
                 .exchange()
                 .expectStatus().isBadRequest();
     }

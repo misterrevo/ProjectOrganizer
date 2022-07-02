@@ -1,7 +1,7 @@
 package com.revo.projectservice.infrastructure.application.rest;
 
 import com.revo.projectservice.domain.dto.RequestTaskDto;
-import com.revo.projectservice.domain.dto.TaskDto;
+import com.revo.projectservice.domain.Task;
 import com.revo.projectservice.domain.exception.NoPermissionException;
 import com.revo.projectservice.domain.exception.TaskDateOutOfRangeInProject;
 import com.revo.projectservice.domain.port.TaskService;
@@ -35,7 +35,7 @@ class TaskControllerTest {
     @MockBean
     private TaskService taskService;
 
-    private final TaskDto taskDto = TaskDto.Builder.aTaskDto()
+    private final Task task = Task.Builder.aTaskDto()
             .name(TASK_NAME)
             .description(TASK_DESCRIPTION)
             .startDate(LocalDateTime.now())
@@ -46,12 +46,12 @@ class TaskControllerTest {
     void shouldReturn201WhileCreatingTask() {
         //given
         //when
-        when(taskService.createTaskByTokenAndProjectId(anyString(), any(RequestTaskDto.class))).thenReturn(Mono.just(taskDto));
+        when(taskService.createTaskByTokenAndProjectId(anyString(), any(RequestTaskDto.class))).thenReturn(Mono.just(task));
         //then
         webTestClient
                 .post()
                 .uri(TASK_END_POINT)
-                .bodyValue(mapOnRequestTaskDto(taskDto))
+                .bodyValue(mapOnRequestTaskDto(task))
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
                 .exchange()
                 .expectStatus().isCreated();
@@ -66,7 +66,7 @@ class TaskControllerTest {
         webTestClient
                 .post()
                 .uri(TASK_END_POINT)
-                .bodyValue(mapOnRequestTaskDto(taskDto))
+                .bodyValue(mapOnRequestTaskDto(task))
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
                 .exchange()
                 .expectStatus().isBadRequest();
@@ -81,7 +81,7 @@ class TaskControllerTest {
         webTestClient
                 .post()
                 .uri(TASK_END_POINT)
-                .bodyValue(mapOnRequestTaskDto(taskDto))
+                .bodyValue(mapOnRequestTaskDto(task))
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
                 .exchange()
                 .expectStatus().isUnauthorized();
@@ -90,12 +90,12 @@ class TaskControllerTest {
     void shouldReturn200WhileEditingTask() {
         //given
         //when
-        when(taskService.editTaskByTokenAndId(anyString(), any(RequestTaskDto.class))).thenReturn(Mono.just(taskDto));
+        when(taskService.editTaskByTokenAndId(anyString(), any(RequestTaskDto.class))).thenReturn(Mono.just(task));
         //then
         webTestClient
                 .patch()
                 .uri(TASK_END_POINT)
-                .bodyValue(mapOnRequestTaskDto(taskDto))
+                .bodyValue(mapOnRequestTaskDto(task))
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
                 .exchange()
                 .expectStatus().isOk();
@@ -110,7 +110,7 @@ class TaskControllerTest {
         webTestClient
                 .patch()
                 .uri(TASK_END_POINT)
-                .bodyValue(mapOnRequestTaskDto(taskDto))
+                .bodyValue(mapOnRequestTaskDto(task))
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
                 .exchange()
                 .expectStatus().isBadRequest();
@@ -125,7 +125,7 @@ class TaskControllerTest {
         webTestClient
                 .patch()
                 .uri(TASK_END_POINT)
-                .bodyValue(mapOnRequestTaskDto(taskDto))
+                .bodyValue(mapOnRequestTaskDto(task))
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
                 .exchange()
                 .expectStatus().isUnauthorized();
@@ -135,7 +135,7 @@ class TaskControllerTest {
     void shouldReturn200WhileDeletingTask() {
         //given
         //when
-        when(taskService.deleteTaskByTokenAndId(anyString(), anyString())).thenReturn(Mono.just(taskDto));
+        when(taskService.deleteTaskByTokenAndId(anyString(), anyString())).thenReturn(Mono.just(task));
         //then
         webTestClient
                 .delete()
@@ -158,7 +158,7 @@ class TaskControllerTest {
                 .expectStatus().isUnauthorized();
     }
     
-    private RequestTaskDto mapOnRequestTaskDto(TaskDto taskDto){
-        return new RequestTaskDto(null, taskDto.getId(), taskDto.getName(), taskDto.getDescription(), taskDto.getStartDate(), taskDto.getEndDate());
+    private RequestTaskDto mapOnRequestTaskDto(Task task){
+        return new RequestTaskDto(null, task.getId(), task.getName(), task.getDescription(), task.getStartDate(), task.getEndDate());
     }
 }

@@ -1,7 +1,6 @@
 package com.revo.authservice.domain;
 
 import com.revo.authservice.domain.dto.AuthorizedUser;
-import com.revo.authservice.domain.dto.UserDto;
 import com.revo.authservice.domain.exception.BadLoginException;
 import com.revo.authservice.domain.exception.EmailInUseException;
 import com.revo.authservice.domain.exception.UsernameInUseException;
@@ -25,24 +24,24 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public Mono<UserDto> createUser(UserDto userDto) {
-        return checkUserExistsByEmail(userDto.email())
-                .then(checkUserExistsByUsername(userDto.username()))
-                .then(encodePassword(userDto))
+    public Mono<User> createUser(User user) {
+        return checkUserExistsByEmail(user.email())
+                .then(checkUserExistsByUsername(user.username()))
+                .then(encodePassword(user))
                 .flatMap(this::saveUser);
     }
 
-    private Mono<UserDto> encodePassword(UserDto userDto) {
-        return Mono.just(userDto)
-                .map(encodePasswordInDto(userDto));
+    private Mono<User> encodePassword(User user) {
+        return Mono.just(user)
+                .map(encodePasswordInDto(user));
     }
 
-    private Function<UserDto, UserDto> encodePasswordInDto(UserDto userDto) {
-        return targetUserDto -> new UserDto(userDto.id(), userDto.username(), encoder.encodePassword(userDto.password()), userDto.email());
+    private Function<User, User> encodePasswordInDto(User user) {
+        return targetUserDto -> new User(user.id(), user.username(), encoder.encodePassword(user.password()), user.email());
     }
 
-    private Mono<UserDto> saveUser(UserDto userDto) {
-        return userRepository.saveUser(userDto);
+    private Mono<User> saveUser(User user) {
+        return userRepository.saveUser(user);
     }
 
     private Mono<Boolean> checkUserExistsByUsername(String username) {
@@ -99,13 +98,13 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public Mono<UserDto> loginUser(UserDto userDto) {
-        return userRepository.getUserByUsername(userDto.username())
-                .filter(targetUserDto -> passwordNotMatch(targetUserDto.password(), userDto.password()))
+    public Mono<User> loginUser(User user) {
+        return userRepository.getUserByUsername(user.username())
+                .filter(targetUserDto -> passwordNotMatch(targetUserDto.password(), user.password()))
                 .switchIfEmpty(getBadLoginError());
     }
 
-    private Mono<UserDto> getBadLoginError() {
+    private Mono<User> getBadLoginError() {
         return Mono.error(new BadLoginException());
     }
 

@@ -2,7 +2,7 @@ package com.revo.projectservice.domain;
 
 import java.time.LocalDateTime;
 
-class Task {
+public class Task {
     private String id;
     private String name;
     private String description;
@@ -67,17 +67,17 @@ class Task {
         private Builder() {
         }
 
-        public static Builder aTask() {
+        public static Builder aTaskDto() {
             return new Builder();
-        }
-
-        public Builder name(String name) {
-            this.name = name;
-            return this;
         }
 
         public Builder id(String id){
             this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
             return this;
         }
 

@@ -1,7 +1,7 @@
 package com.revo.authservice.infrastructure.application.rest;
 
 import com.revo.authservice.domain.dto.AuthorizedUser;
-import com.revo.authservice.domain.dto.UserDto;
+import com.revo.authservice.domain.User;
 import com.revo.authservice.domain.port.UserService;
 import com.revo.authservice.infrastructure.application.rest.dto.LoginDto;
 import com.revo.authservice.infrastructure.application.rest.dto.RegisterDto;
@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
-
-import java.net.URI;
 
 import static com.revo.authservice.infrastructure.application.rest.DtoMapper.Mapper;
 
@@ -27,7 +25,7 @@ class AuthController {
     }
 
     @PostMapping("/login")
-    Mono<ResponseEntity<UserDto>> loginUser(@RequestBody Mono<LoginDto> loginDto){
+    Mono<ResponseEntity<User>> loginUser(@RequestBody Mono<LoginDto> loginDto){
         return loginDto
                 .map(Mapper::fromLogin)
                 .flatMap(userService::loginUser)
@@ -35,7 +33,7 @@ class AuthController {
     }
 
     @PostMapping("/register")
-    Mono<ResponseEntity<UserDto>> registerUser(@RequestBody Mono<RegisterDto> registerDto){
+    Mono<ResponseEntity<User>> registerUser(@RequestBody Mono<RegisterDto> registerDto){
         return registerDto
                 .map(Mapper::fromRegister)
                 .flatMap(userService::createUser)

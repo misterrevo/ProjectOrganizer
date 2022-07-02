@@ -1,6 +1,6 @@
 package com.revo.projectservice.infrastructure.database;
 
-import com.revo.projectservice.domain.dto.ProjectDto;
+import com.revo.projectservice.domain.Project;
 import com.revo.projectservice.domain.port.ProjectRepository;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -17,7 +17,7 @@ class ProjectRepositoryImp implements ProjectRepository {
     }
 
     @Override
-    public Flux<ProjectDto> getAllProjectsByOwner(String owner) {
+    public Flux<Project> getAllProjectsByOwner(String owner) {
         return getAllByOwner(owner)
                 .map(Mapper::mapProjectEntityToDto);
     }
@@ -27,7 +27,7 @@ class ProjectRepositoryImp implements ProjectRepository {
     }
 
     @Override
-    public Mono<ProjectDto> getProjectByOwner(String id, String owner) {
+    public Mono<Project> getProjectByOwner(String id, String owner) {
         return getByOwnerAndId(id, owner)
                 .map(Mapper::mapProjectEntityToDto);
     }
@@ -37,17 +37,17 @@ class ProjectRepositoryImp implements ProjectRepository {
     }
 
     @Override
-    public Mono<ProjectDto> saveProject(ProjectDto projectDto) {
-        return getSavedProjectEntity(projectDto)
+    public Mono<Project> saveProject(Project project) {
+        return getSavedProjectEntity(project)
                 .map(Mapper::mapProjectEntityToDto);
     }
 
-    private Mono<ProjectEntity> getSavedProjectEntity(ProjectDto projectDto) {
-        return projectRepository.save(Mapper.mapProjectDtoToEntity(projectDto));
+    private Mono<ProjectEntity> getSavedProjectEntity(Project project) {
+        return projectRepository.save(Mapper.mapProjectDtoToEntity(project));
     }
 
     @Override
-    public Mono<ProjectDto> deleteProject(String id, String owner) {
+    public Mono<Project> deleteProject(String id, String owner) {
         return deleteById(id)
                 .then(getProjectByOwner(id, owner));
     }

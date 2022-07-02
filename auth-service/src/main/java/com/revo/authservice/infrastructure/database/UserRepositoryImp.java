@@ -1,6 +1,6 @@
 package com.revo.authservice.infrastructure.database;
 
-import com.revo.authservice.domain.dto.UserDto;
+import com.revo.authservice.domain.User;
 import com.revo.authservice.domain.port.UserRepository;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -16,13 +16,13 @@ class UserRepositoryImp implements UserRepository {
     }
 
     @Override
-    public Mono<UserDto> saveUser(UserDto userDto) {
-        return getSavedUserEntity(userDto)
+    public Mono<User> saveUser(User user) {
+        return getSavedUserEntity(user)
                 .map(Mapper::mapUserEntityToDto);
     }
 
-    private Mono<UserEntity> getSavedUserEntity(UserDto userDto) {
-        return userRepository.save(Mapper.mapUserEntityFromDto(userDto));
+    private Mono<UserEntity> getSavedUserEntity(User user) {
+        return userRepository.save(Mapper.mapUserEntityFromDto(user));
     }
 
     @Override
@@ -36,7 +36,7 @@ class UserRepositoryImp implements UserRepository {
     }
 
     @Override
-    public Mono<UserDto> getUserByUsername(String username) {
+    public Mono<User> getUserByUsername(String username) {
         return getUserEntityByUsername(username)
                 .map(Mapper::mapUserEntityToDto);
     }

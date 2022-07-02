@@ -1,6 +1,6 @@
 package com.revo.projectservice.infrastructure.application.rest;
 
-import com.revo.projectservice.domain.dto.ProjectDto;
+import com.revo.projectservice.domain.Project;
 import com.revo.projectservice.domain.dto.RequestProjectDto;
 import com.revo.projectservice.domain.exception.NoPermissionException;
 import com.revo.projectservice.domain.port.ProjectService;
@@ -35,7 +35,7 @@ class ProjectControllerTest {
     @MockBean
     private ProjectService projectService;
 
-    private final ProjectDto projectDto = ProjectDto.Builder.aProjectDto()
+    private final Project project = Project.Builder.aProjectDto()
             .name(PROJECT_NAME)
             .owner(OWNER_NAME)
             .startDate(LocalDateTime.now())
@@ -46,7 +46,7 @@ class ProjectControllerTest {
     void shouldReturn200WhileGettingAllProjects() {
         //given
         //when
-        when(projectService.getAllProjectsByToken(anyString())).thenReturn(Flux.just(projectDto));
+        when(projectService.getAllProjectsByToken(anyString())).thenReturn(Flux.just(project));
         //then
         webTestClient
                 .get()
@@ -74,7 +74,7 @@ class ProjectControllerTest {
     void shouldReturn200WhileGettingProject() {
         //given
         //when
-        when(projectService.getProjectByTokenAndId(anyString(), anyString())).thenReturn(Mono.just(projectDto));
+        when(projectService.getProjectByTokenAndId(anyString(), anyString())).thenReturn(Mono.just(project));
         //then
         webTestClient
                 .get()
@@ -102,13 +102,13 @@ class ProjectControllerTest {
     void shouldReturn201WhileCreatingProject() {
         //given
         //when
-        when(projectService.createProjectByToken(anyString(), any(RequestProjectDto.class))).thenReturn(Mono.just(projectDto));
+        when(projectService.createProjectByToken(anyString(), any(RequestProjectDto.class))).thenReturn(Mono.just(project));
         //then
         webTestClient
                 .post()
                 .uri(PROJECTS_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
-                .bodyValue(mapOnRequestProjectDto(projectDto))
+                .bodyValue(mapOnRequestProjectDto(project))
                 .exchange()
                 .expectStatus().isCreated();
     }
@@ -123,7 +123,7 @@ class ProjectControllerTest {
                 .post()
                 .uri(PROJECTS_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
-                .bodyValue(mapOnRequestProjectDto(projectDto))
+                .bodyValue(mapOnRequestProjectDto(project))
                 .exchange()
                 .expectStatus().isUnauthorized();
     }
@@ -132,7 +132,7 @@ class ProjectControllerTest {
     void shouldReturn200WhileDeletingProject() {
         //given
         //when
-        when(projectService.deleteProjectByTokenAndId(anyString(), anyString())).thenReturn(Mono.just(projectDto));
+        when(projectService.deleteProjectByTokenAndId(anyString(), anyString())).thenReturn(Mono.just(project));
         //then
         webTestClient
                 .delete()
@@ -160,13 +160,13 @@ class ProjectControllerTest {
     void shouldReturn200WhileEditingProject() {
         //given
         //when
-        when(projectService.editProjectByTokenAndId(anyString(), any(RequestProjectDto.class))).thenReturn(Mono.just(projectDto));
+        when(projectService.editProjectByTokenAndId(anyString(), any(RequestProjectDto.class))).thenReturn(Mono.just(project));
         //then
         webTestClient
                 .patch()
                 .uri(SINGLE_PROJECT_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
-                .bodyValue(mapOnRequestProjectDto(projectDto))
+                .bodyValue(mapOnRequestProjectDto(project))
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -181,12 +181,12 @@ class ProjectControllerTest {
                 .patch()
                 .uri(SINGLE_PROJECT_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
-                .bodyValue(mapOnRequestProjectDto(projectDto))
+                .bodyValue(mapOnRequestProjectDto(project))
                 .exchange()
                 .expectStatus().isUnauthorized();
     }
     
-    private RequestProjectDto mapOnRequestProjectDto(ProjectDto projectDto){
-        return new RequestProjectDto(projectDto.getId(), projectDto.getName(), projectDto.getStartDate(), projectDto.getEndDate());
+    private RequestProjectDto mapOnRequestProjectDto(Project project){
+        return new RequestProjectDto(project.getId(), project.getName(), project.getStartDate(), project.getEndDate());
     }
 }

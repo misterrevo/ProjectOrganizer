@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-class Project {
+public class Project {
     private String id;
     private String owner;
     private String name;
@@ -14,6 +14,7 @@ class Project {
 
     public Project(String id, String owner, String name, LocalDateTime startDate, LocalDateTime endDate, List<Task> tasks) {
         this.id = id;
+        this.owner = owner;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -79,7 +80,7 @@ class Project {
         private Builder() {
         }
 
-        public static Builder aProject() {
+        public static Builder aProjectDto() {
             return new Builder();
         }
 

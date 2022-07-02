@@ -1,6 +1,6 @@
 package com.revo.authservice.infrastructure.database;
 
-import com.revo.authservice.domain.dto.UserDto;
+import com.revo.authservice.domain.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -8,6 +8,6 @@ import org.mapstruct.factory.Mappers;
 interface UserMapper {
     UserMapper Mapper = Mappers.getMapper(UserMapper.class);
 
-    UserDto mapUserEntityToDto(UserEntity entity);
-    UserEntity mapUserEntityFromDto(UserDto userDto);
+    User mapUserEntityToDto(UserEntity entity);
+    UserEntity mapUserEntityFromDto(User user);
 }
