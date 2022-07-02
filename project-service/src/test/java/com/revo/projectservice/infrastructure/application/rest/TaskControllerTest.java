@@ -23,7 +23,6 @@ import static org.mockito.Mockito.when;
 @WebFluxTest(controllers = TaskController.class)
 @RunWith(SpringRunner.class)
 class TaskControllerTest {
-
     private static final String TASK_NAME = "Task";
     private static final String TASK_DESCRIPTION = "Description";
     private static final String TASK_END_POINT = "/tasks/1";

@@ -12,7 +12,6 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RestControllerAdvice
 class AuthControllerAdvice {
-
     @ExceptionHandler(BadLoginException.class)
     @ResponseStatus(UNAUTHORIZED)
     public String handleBadLoginException(BadLoginException exception){

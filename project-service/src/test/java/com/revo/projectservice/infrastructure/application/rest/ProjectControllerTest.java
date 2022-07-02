@@ -23,7 +23,6 @@ import static org.mockito.Mockito.when;
 @WebFluxTest(controllers = ProjectController.class)
 @RunWith(SpringRunner.class)
 class ProjectControllerTest {
-
     private static final String PROJECT_NAME = "Test";
     private static final String OWNER_NAME = "Owner";
     private static final String PROJECTS_END_POINT = "/projects";

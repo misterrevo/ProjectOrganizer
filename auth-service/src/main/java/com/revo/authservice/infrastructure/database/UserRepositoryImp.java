@@ -9,7 +9,6 @@ import static com.revo.authservice.infrastructure.database.UserMapper.Mapper;
 
 @Component
 class UserRepositoryImp implements UserRepository {
-
     private final com.revo.authservice.infrastructure.database.UserRepository userRepository;
 
     UserRepositoryImp(com.revo.authservice.infrastructure.database.UserRepository userRepository) {

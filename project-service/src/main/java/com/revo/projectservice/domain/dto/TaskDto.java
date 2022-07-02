@@ -3,7 +3,6 @@ package com.revo.projectservice.domain.dto;
 import java.time.LocalDateTime;
 
 public class TaskDto {
-
     private String id;
     private String name;
     private String description;

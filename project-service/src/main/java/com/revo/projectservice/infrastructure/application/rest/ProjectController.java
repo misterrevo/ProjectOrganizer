@@ -21,7 +21,6 @@ import java.net.URI;
 @RestController
 @RequestMapping("/projects")
 class ProjectController {
-
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String ID_PATH_VARIABLE = "id";
     private static final String PROJECTS_LOCATION = "/projects";

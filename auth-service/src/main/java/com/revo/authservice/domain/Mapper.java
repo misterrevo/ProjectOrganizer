@@ -3,7 +3,6 @@ package com.revo.authservice.domain;
 import com.revo.authservice.domain.dto.UserDto;
 
 class Mapper {
-
     static User mapUserFromDto(UserDto userDto){
         return User.Builder.anUser()
                 .id(userDto.id())

@@ -14,7 +14,6 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RestControllerAdvice
 class ControllerAdvice {
-
     @ExceptionHandler(NoPermissionException.class)
     @ResponseStatus(UNAUTHORIZED)
     public String handleNoPermissionException(NoPermissionException exception){

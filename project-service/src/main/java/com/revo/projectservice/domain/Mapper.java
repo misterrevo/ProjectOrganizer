@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 class Mapper {
-
     static Project mapProjectFromDto(ProjectDto projectDto){
         return Project.Builder.aProject()
                 .id(projectDto.getId())

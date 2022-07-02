@@ -17,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableReactiveMongoRepositories(basePackages = "com.revo.authservice.infrastructure")
 @PropertySource(value = "classpath:jwt.yml", factory = YamlFactory.class)
 class BeanConfiguration {
-
     @Bean
     public UserService createUserServiceBean(UserRepository userRepository, Jwt jwt, Encoder encoder){
         return new UserServiceImp(userRepository, jwt, encoder);

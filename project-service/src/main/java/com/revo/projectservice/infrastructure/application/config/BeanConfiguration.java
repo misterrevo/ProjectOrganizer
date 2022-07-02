@@ -11,10 +11,8 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 @ComponentScan(value = "com.revo.projectservice.infrastructure")
 @EnableReactiveMongoRepositories(basePackages = "com.revo.projectservice.infrastructure")
 class BeanConfiguration {
-
     @Bean
     public DomainServiceImp createServiceBean(ProjectRepository projectRepository){
         return new DomainServiceImp(projectRepository);
     }
-
 }

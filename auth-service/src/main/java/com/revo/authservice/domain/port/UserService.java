@@ -5,7 +5,6 @@ import com.revo.authservice.domain.dto.UserDto;
 import reactor.core.publisher.Mono;
 
 public interface UserService {
-
     Mono<UserDto> createUser(UserDto userDto);
     Mono<AuthorizedUser> getUsernameFromToken(String token);
     String getTokenFromUsername(String username);

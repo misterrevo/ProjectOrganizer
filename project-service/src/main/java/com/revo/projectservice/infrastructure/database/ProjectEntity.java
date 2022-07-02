@@ -10,7 +10,6 @@ import java.util.List;
 
 @Document
 class ProjectEntity {
-
     @Id
     private String id;
     private String owner;

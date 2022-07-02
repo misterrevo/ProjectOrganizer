@@ -19,7 +19,6 @@ import java.net.URI;
 @RestController
 @RequestMapping("/tasks")
 class TaskController {
-
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String PROJECT_ID_PATH_VARIABLE = "projectId";
     private static final String TASKS_LOCATION = "/tasks";

@@ -8,7 +8,6 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 interface DtoMapper {
-
     DtoMapper Mapper = Mappers.getMapper(DtoMapper.class);
 
     UserDto fromRegister(RegisterDto registerDto);

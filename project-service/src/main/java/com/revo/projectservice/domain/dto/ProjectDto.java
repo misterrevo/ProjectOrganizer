@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectDto {
-
     private String id;
     private String owner;
     private String name;

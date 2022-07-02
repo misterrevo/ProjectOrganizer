@@ -13,7 +13,6 @@ import java.util.Date;
 
 @Component
 class JwtImp implements Jwt {
-
     private static final String TOKEN_PREFIX = "Bearer ";
     private static final String TOKEN_REPLACEMENT = "";
     private JWTVerifier verifier;

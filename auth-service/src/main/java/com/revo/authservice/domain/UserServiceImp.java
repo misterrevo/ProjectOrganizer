@@ -14,7 +14,6 @@ import reactor.core.publisher.Mono;
 import java.util.function.Function;
 
 public class UserServiceImp implements UserService {
-
     private final UserRepository userRepository;
     private final Jwt jwt;
     private final Encoder encoder;
@@ -113,5 +112,4 @@ public class UserServiceImp implements UserService {
     private boolean passwordNotMatch(String basePassword, String requestPassword) {
         return !encoder.passwordMatches(requestPassword, basePassword);
     }
-
 }

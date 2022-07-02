@@ -1,7 +1,6 @@
 package com.revo.authservice.domain;
 
 class User {
-
     private String id;
     private String username;
     private String password;

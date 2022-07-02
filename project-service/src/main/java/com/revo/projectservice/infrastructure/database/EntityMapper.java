@@ -6,7 +6,6 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 interface EntityMapper {
-
     EntityMapper Mapper = Mappers.getMapper(EntityMapper.class);
 
     ProjectDto mapProjectEntityToDto(ProjectEntity projectEntity);

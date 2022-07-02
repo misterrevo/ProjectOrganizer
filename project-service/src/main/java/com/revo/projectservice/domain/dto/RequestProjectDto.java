@@ -3,7 +3,6 @@ package com.revo.projectservice.domain.dto;
 import java.time.LocalDateTime;
 
 public class RequestProjectDto {
-
     private String id;
     private final String name;
     private final LocalDateTime startDate;

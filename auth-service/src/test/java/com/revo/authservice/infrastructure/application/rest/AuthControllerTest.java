@@ -21,7 +21,6 @@ import static org.mockito.Mockito.when;
 @WebFluxTest(controllers = AuthController.class)
 @RunWith(SpringRunner.class)
 class AuthControllerTest {
-
     private static final String REGISTER_END_POINT = "/register";
     private static final String LOGIN_END_POINT = "/login";
     private static final String USERNAME_IN_USE = "USERNAMEINUSE";

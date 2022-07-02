@@ -10,7 +10,6 @@ import static com.revo.projectservice.infrastructure.database.EntityMapper.Mappe
 
 @Component
 class ProjectRepositoryImp implements ProjectRepository {
-
     private final com.revo.projectservice.infrastructure.database.ProjectRepository projectRepository;
 
     ProjectRepositoryImp(com.revo.projectservice.infrastructure.database.ProjectRepository projectRepository) {
