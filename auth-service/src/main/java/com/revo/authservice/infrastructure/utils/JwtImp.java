@@ -1,6 +1,7 @@
 package com.revo.authservice.infrastructure.utils;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.revo.authservice.domain.exception.BadLoginException;
 import com.revo.authservice.domain.port.Jwt;
@@ -14,6 +15,7 @@ class JwtImp implements Jwt {
 
     private static final String TOKEN_PREFIX = "Bearer ";
     private static final String TOKEN_REPLACEMENT = "";
+    private static JWTVerifier verifier;
 
     @Value("${spring.security.jwt.secret}")
     private String secret;
@@ -31,12 +33,19 @@ class JwtImp implements Jwt {
     @Override
     public String getSubjectFromToken(String token) {
         try{
-            return JWT.require(Algorithm.HMAC256(secret))
-                    .build()
+            return getJwtVerifier()
                     .verify(token.replace(TOKEN_PREFIX, TOKEN_REPLACEMENT))
                     .getSubject();
         } catch (Exception exception){
             throw new BadLoginException();
         }
+    }
+
+    private JWTVerifier getJwtVerifier() {
+        if(verifier == null){
+            verifier = JWT.require(Algorithm.HMAC256(secret))
+                    .build();
+        }
+        return verifier;
     }
 }
