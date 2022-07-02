@@ -96,7 +96,7 @@ class AuthControllerTest {
     void shouldReturn200WhileTranslatingTokenOnUser() {
         //given
         //when
-        when(userService.getUserFromToken(anyString())).thenReturn(Mono.just(userDto));
+        when(userService.getUsernameFromToken(anyString())).thenReturn(Mono.just(userDto));
         //then
         webTestClient
                 .post()
@@ -110,7 +110,7 @@ class AuthControllerTest {
     void shouldReturn401WhileTranslatingTokenOnUser() {
         //given
         //when
-        when(userService.getUserFromToken(anyString())).thenReturn(Mono.error(new BadLoginException()));
+        when(userService.getUsernameFromToken(anyString())).thenReturn(Mono.error(new BadLoginException()));
         //then
         webTestClient
                 .post()

@@ -6,7 +6,7 @@ import reactor.core.publisher.Mono;
 public interface UserService {
 
     Mono<UserDto> createUser(UserDto userDto);
-    Mono<UserDto> getUserFromToken(String token);
+    Mono<String> getUsernameFromToken(String token);
     String getTokenFromUsername(String username);
     Mono<UserDto> loginUser(UserDto userDto);
 }

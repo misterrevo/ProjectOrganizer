@@ -79,9 +79,10 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public Mono<UserDto> getUserFromToken(String token) {
+    public Mono<String> getUsernameFromToken(String token) {
         return userRepository
-                .getUserByUsername(getSubjectFromToken(token));
+                .getUserByUsername(getSubjectFromToken(token))
+                .map(userDto -> userDto.username());
     }
 
     private String getSubjectFromToken(String token) {
