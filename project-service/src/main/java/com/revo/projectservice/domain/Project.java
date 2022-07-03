@@ -17,7 +17,7 @@ public class Project {
         this.owner = owner;
         this.name = name;
         this.startDate = startDate;
-        this.endDate = endDate;
+        this.endDate = endDate; 
         this.tasks = tasks;
     }
 
