@@ -100,7 +100,7 @@ public class UserServiceImp implements UserService {
     @Override
     public Mono<User> loginUser(User user) {
         return userRepository.getUserByUsername(user.username())
-                .filter(targetUserDto -> passwordNotMatch(targetUserDto.password(), user.password()))
+                .filter(targetUserDto -> passwordMatch(targetUserDto.password(), user.password()))
                 .switchIfEmpty(getBadLoginError());
     }
 
@@ -108,7 +108,7 @@ public class UserServiceImp implements UserService {
         return Mono.error(new BadLoginException());
     }
 
-    private boolean passwordNotMatch(String basePassword, String requestPassword) {
-        return !encoder.passwordMatches(requestPassword, basePassword);
+    private boolean passwordMatch(String basePassword, String requestPassword) {
+        return encoder.passwordMatches(requestPassword, basePassword);
     }
 }
