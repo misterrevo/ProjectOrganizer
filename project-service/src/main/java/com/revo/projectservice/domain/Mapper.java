@@ -6,20 +6,20 @@ import com.revo.projectservice.domain.dto.RequestTaskDto;
 class Mapper {
     public static Task mapTaskFromRestDto(RequestTaskDto requestTaskDto) {
         return Task.Builder.aTaskDto()
-                .id(requestTaskDto.getId())
-                .name(requestTaskDto.getName())
-                .description(requestTaskDto.getDescription())
-                .startDate(requestTaskDto.getStartDate())
-                .endDate(requestTaskDto.getEndDate())
+                .id(requestTaskDto.id)
+                .name(requestTaskDto.name)
+                .description(requestTaskDto.description)
+                .startDate(requestTaskDto.startDate)
+                .endDate(requestTaskDto.endDate)
                 .build();
     }
 
     public static Project mapProjectFromRestDto(RequestProjectDto requestProjectDto) {
         return Project.Builder.aProjectDto()
-                .id(requestProjectDto.getId())
-                .name(requestProjectDto.getName())
-                .startDate(requestProjectDto.getStartDate())
-                .endDate(requestProjectDto.getEndDate())
+                .id(requestProjectDto.id)
+                .name(requestProjectDto.name)
+                .startDate(requestProjectDto.startDate)
+                .endDate(requestProjectDto.endDate)
                 .build();
     }
 }

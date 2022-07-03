@@ -1,9 +1,9 @@
 package com.revo.projectservice.domain.dto;
 
 public class AuthorizedUser {
-    private String username;
+    public String username;
 
-    public String getUsername() {
-        return username;
+    public AuthorizedUser(String username) {
+        this.username = username;
     }
 }
