@@ -100,17 +100,6 @@ class UserServiceImpTest {
                 .expectError();
     }
 
-// Nothing was tested here!
-//    @Test
-//    void shouldGetTokenFromUsername() {
-//        //given
-//        //when
-//        Mockito.when(jwt.createTokenFromUsername(TEST_USER_NAME)).thenReturn(TEST_TOKEN);
-//        //then
-//        String token = userServiceImp.getTokenFromUsername(TEST_USER_NAME);
-//        assertEquals(token, TEST_TOKEN);
-//    }
-
     @Test
     void shouldLoginUser() {
         //given
