@@ -202,10 +202,13 @@ public class DomainServiceImp implements ProjectService, TaskService {
     public Mono<Task> deleteTaskByTokenAndId(String token, String id) {
         return getAuthorizedUserMonoFromToken(token)
                 .flatMap(user -> {
-                    return Mono.from(getAllProjectsByOwner(user.username)).flatMap(projectDto -> {
-                        for (Task task : projectDto.getTasks()) {
+                    return Mono.from(getAllProjectsByOwner(user.username)).flatMap(project -> {
+                        for (Task task : project.getTasks()) {
                             if (Objects.equals(task.getId(), id)) {
-                                deleteProjectByIdAndOwner(id, user);
+                                List<Task> taskList = project.getTasks();
+                                taskList.remove(task);
+                                saveProjectDtoMono(project)
+                                        .subscribe();
                                 return Mono.just(task);
                             }
                         }
