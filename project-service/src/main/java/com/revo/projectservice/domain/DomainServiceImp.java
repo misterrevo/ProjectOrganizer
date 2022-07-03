@@ -159,14 +159,14 @@ public class DomainServiceImp implements ProjectService, TaskService {
                                 if (isNotInProjectTimestamp(requestTaskDto, projectDto)) {
                                     return getTaskDateOutOfRangeInProjectError();
                                 }
-                                return checkTaskIsInProjectAndUpdateOrGetError(requestTaskDto.getId(), requestTaskDto, projectDto);
+                                return checkTaskIsInProjectAndUpdateOrGetError(requestTaskDto, projectDto);
                             }));
                 });
     }
 
-    private Mono<Task> checkTaskIsInProjectAndUpdateOrGetError(String id, RequestTaskDto requestTaskDto, Project project) {
+    private Mono<Task> checkTaskIsInProjectAndUpdateOrGetError(RequestTaskDto requestTaskDto, Project project) {
         for (Task task : project.getTasks()) {
-            if (isCurrentTask(id, task)) {
+            if (isCurrentTask(requestTaskDto.getId(), task)) {
                 return updateTaskInProjectAndReturn(requestTaskDto, project, task);
             }
         }
