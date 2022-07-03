@@ -1,7 +1,8 @@
-Aplikcja do zarzadzania projektami.
 
-* Api-Gateway: Gateway dla endpointow																	
-* Auth-Service: obslguje rejestracje, logowanie, autoryzuje uzytkownika na podstawie tokenu											
-* Config-Server: Ogolna konfiguracja dla serwisow, aktualnie zawiera tylko server.port=0															
-* Project-Service: Operacje CRUD na obiektach Project i Task																	
+Application to manage projects.
+
+* Api-Gateway: Gateway for all endpoints
+* Auth-Service: Service for register, login, and authorize by tokens
+* Config-Server: Configuration for other services, in vault server on localhost i write only server.port=0
+* Project-Service: Crud operation for objects Project and Task
 * Registry-Service: Server Eureka
