@@ -10,12 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import static com.revo.authservice.infrastructure.application.rest.DtoMapper.Mapper;
 
 @RestController
+@RequestMapping(consumes = "application/json", produces = "application/json")
 class AuthController {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private final UserService userService;

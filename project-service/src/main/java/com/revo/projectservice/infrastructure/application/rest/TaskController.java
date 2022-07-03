@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping(path= "/tasks", consumes = "application/json", produces = "application/json")
 class TaskController {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String PROJECT_ID_PATH_VARIABLE = "projectId";

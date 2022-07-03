@@ -107,6 +107,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
         return getAuthorizedUserMonoFromToken(token)
                 .flatMap(user -> {
                     Project project = Mapper.mapProjectFromRestDto(requestProjectDto);
+                    project.setOwner(user.username);
                     return saveProjectDtoMono(project);
                 });
     }
@@ -158,14 +159,26 @@ public class DomainServiceImp implements ProjectService, TaskService {
     public Mono<Task> editTaskByTokenAndId(String token, RequestTaskDto requestTaskDto) {
         return getAuthorizedUserMonoFromToken(token)
                 .flatMap(user -> {
-                    return Mono.from(getAllProjectsByOwner(user.username)
-                            .flatMap(projectDto -> {
-                                if (isNotInProjectTimestamp(requestTaskDto, projectDto)) {
+                    return getProjectMonoByTaskId(requestTaskDto.id, user)
+                            .flatMap(project -> {
+                                if (isNotInProjectTimestamp(requestTaskDto, project)) {
                                     return getTaskDateOutOfRangeInProjectError();
                                 }
-                                return checkTaskIsInProjectAndUpdateOrGetError(requestTaskDto, projectDto);
-                            }));
+                                return checkTaskIsInProjectAndUpdateOrGetError(requestTaskDto, project);
+                            });
                 });
+    }
+
+    private Mono<Project> getProjectMonoByTaskId(String taskId, AuthorizedUser user) {
+        return Mono.from(getAllProjectsByOwner(user.username)
+                .filter(project -> {
+                    for (Task task : project.getTasks()) {
+                        if (isCurrentTask(taskId, task)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }));
     }
 
     private Mono<Task> checkTaskIsInProjectAndUpdateOrGetError(RequestTaskDto requestTaskDto, Project project) {
@@ -206,7 +219,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
     public Mono<Task> deleteTaskByTokenAndId(String token, String id) {
         return getAuthorizedUserMonoFromToken(token)
                 .flatMap(user -> {
-                    return Mono.from(getAllProjectsByOwner(user.username)).flatMap(project -> {
+                    return getProjectMonoByTaskId(id, user).flatMap(project -> {
                         for (Task task : project.getTasks()) {
                             if (isCurrentTask(id, task)) {
                                 return updateProjectAndGetDeletedTask(project, task);

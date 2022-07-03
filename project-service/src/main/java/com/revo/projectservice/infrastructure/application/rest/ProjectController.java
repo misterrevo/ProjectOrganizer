@@ -19,7 +19,7 @@ import reactor.core.publisher.Mono;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/projects")
+@RequestMapping(path= "/projects", consumes = "application/json", produces = "application/json")
 class ProjectController {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String ID_PATH_VARIABLE = "id";
