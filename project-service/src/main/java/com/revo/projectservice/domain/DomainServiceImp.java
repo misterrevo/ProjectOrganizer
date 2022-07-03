@@ -120,15 +120,19 @@ public class DomainServiceImp implements ProjectService, TaskService {
                                 if (isNotInProjectTimestamp(requestTaskDto, projectDto)) {
                                     return getTaskDateOutOfRangeInProjectError();
                                 }
-                                Task task = Mapper.mapTaskFromRestDto(requestTaskDto);
-                                task.setId(generateId());
-                                List<Task> taskList = projectDto.getTasks();
-                                taskList.add(task);
-                                saveProjectDtoMono(projectDto)
-                                        .subscribe();
-                                return Mono.just(task);
+                                return updateProjectAndGetCreatedTask(requestTaskDto, projectDto);
                             });
                 });
+    }
+
+    private Mono<Task> updateProjectAndGetCreatedTask(RequestTaskDto requestTaskDto, Project projectDto) {
+        Task task = Mapper.mapTaskFromRestDto(requestTaskDto);
+        task.setId(generateId());
+        List<Task> taskList = projectDto.getTasks();
+        taskList.add(task);
+        saveProjectDtoMono(projectDto)
+                .subscribe();
+        return Mono.just(task);
     }
 
     private Mono<Task> getTaskDateOutOfRangeInProjectError() {
@@ -204,17 +208,21 @@ public class DomainServiceImp implements ProjectService, TaskService {
                 .flatMap(user -> {
                     return Mono.from(getAllProjectsByOwner(user.username)).flatMap(project -> {
                         for (Task task : project.getTasks()) {
-                            if (Objects.equals(task.getId(), id)) {
-                                List<Task> taskList = project.getTasks();
-                                taskList.remove(task);
-                                saveProjectDtoMono(project)
-                                        .subscribe();
-                                return Mono.just(task);
+                            if (isCurrentTask(id, task)) {
+                                return updateProjectAndGetDeletedTask(project, task);
                             }
                         }
                         return getNoTaskFoundError();
                     });
                 });
+    }
+
+    private Mono<Task> updateProjectAndGetDeletedTask(Project project, Task task) {
+        List<Task> taskList = project.getTasks();
+        taskList.remove(task);
+        saveProjectDtoMono(project)
+                .subscribe();
+        return Mono.just(task);
     }
 
     private Mono<Project> deleteProjectByIdAndOwner(String id, AuthorizedUser user) {
