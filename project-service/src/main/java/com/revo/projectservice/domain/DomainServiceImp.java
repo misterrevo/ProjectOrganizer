@@ -46,7 +46,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
     }
 
     private Flux<Project> getAllProjectsByOwner(AuthorizedUser user) {
-        return projectRepositoryPort.getAllProjectsByOwner(user.getUsername());
+        return projectRepositoryPort.getAllProjectsByOwner(user.username);
     }
 
     private WebClient.ResponseSpec getUserFromAuthServiceAsResponse(String token) {
@@ -83,7 +83,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
         return getAuthorizedUserMonoFromToken(token)
                 .flatMap(user -> {
                     Project project = mapProjectFromRestDto(requestProjectDto);
-                    project.setOwner(user.getUsername());
+                    project.setOwner(user.username);
                     return saveProjectDtoMono(project);
                 });
     }
@@ -115,7 +115,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
     public Mono<Task> createTaskByTokenAndProjectId(String token, RequestTaskDto requestTaskDto) {
         return getAuthorizedUserMonoFromToken(token)
                 .flatMap(user -> {
-                    return getProjectByOwnerAndId(requestTaskDto.getProjectId(), user)
+                    return getProjectByOwnerAndId(requestTaskDto.projectId, user)
                             .flatMap(projectDto -> {
                                 if (isNotInProjectTimestamp(requestTaskDto, projectDto)) {
                                     return getTaskDateOutOfRangeInProjectError();
@@ -138,11 +138,11 @@ public class DomainServiceImp implements ProjectService, TaskService {
     private boolean isNotInProjectTimestamp(RequestTaskDto requestTaskDto, Project project) {
         LocalDateTime endDate = project.getEndDate();
         LocalDateTime startDate = project.getStartDate();
-        return endDate.isBefore(requestTaskDto.getEndDate()) || startDate.isAfter(requestTaskDto.getStartDate());
+        return endDate.isBefore(requestTaskDto.endDate) || startDate.isAfter(requestTaskDto.startDate);
     }
 
     private Mono<Project> getProjectByOwnerAndId(String projectId, AuthorizedUser user) {
-        return projectRepositoryPort.getProjectByOwner(projectId, user.getUsername());
+        return projectRepositoryPort.getProjectByOwner(projectId, user.username);
     }
 
     private String generateId() {
@@ -154,7 +154,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
     public Mono<Task> editTaskByTokenAndId(String token, RequestTaskDto requestTaskDto) {
         return getAuthorizedUserMonoFromToken(token)
                 .flatMap(user -> {
-                    return Mono.from(getAllProjectsByOwner(user.getUsername())
+                    return Mono.from(getAllProjectsByOwner(user.username)
                             .flatMap(projectDto -> {
                                 if (isNotInProjectTimestamp(requestTaskDto, projectDto)) {
                                     return getTaskDateOutOfRangeInProjectError();
@@ -166,7 +166,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
 
     private Mono<Task> checkTaskIsInProjectAndUpdateOrGetError(RequestTaskDto requestTaskDto, Project project) {
         for (Task task : project.getTasks()) {
-            if (isCurrentTask(requestTaskDto.getId(), task)) {
+            if (isCurrentTask(requestTaskDto.id, task)) {
                 return updateTaskInProjectAndReturn(requestTaskDto, project, task);
             }
         }
@@ -192,17 +192,17 @@ public class DomainServiceImp implements ProjectService, TaskService {
     }
 
     private void updateTask(Task task, RequestTaskDto requestTaskDto) {
-        task.setName(requestTaskDto.getName());
-        task.setDescription(requestTaskDto.getDescription());
-        task.setStartDate(requestTaskDto.getStartDate());
-        task.setEndDate(requestTaskDto.getEndDate());
+        task.setName(requestTaskDto.name);
+        task.setDescription(requestTaskDto.description);
+        task.setStartDate(requestTaskDto.startDate);
+        task.setEndDate(requestTaskDto.endDate);
     }
 
     @Override
     public Mono<Task> deleteTaskByTokenAndId(String token, String id) {
         return getAuthorizedUserMonoFromToken(token)
                 .flatMap(user -> {
-                    return Mono.from(getAllProjectsByOwner(user.getUsername())).flatMap(projectDto -> {
+                    return Mono.from(getAllProjectsByOwner(user.username)).flatMap(projectDto -> {
                         for (Task task : projectDto.getTasks()) {
                             if (Objects.equals(task.getId(), id)) {
                                 deleteProjectByIdAndOwner(id, user);
@@ -215,6 +215,6 @@ public class DomainServiceImp implements ProjectService, TaskService {
     }
 
     private Mono<Project> deleteProjectByIdAndOwner(String id, AuthorizedUser user) {
-        return projectRepositoryPort.deleteProject(id, user.getUsername());
+        return projectRepositoryPort.deleteProject(id, user.username);
     }
 }

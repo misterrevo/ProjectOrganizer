@@ -33,14 +33,20 @@ class TaskController {
     @PostMapping("/{projectId}")
     Mono<ResponseEntity<Task>> createTaskByTokenAndProjectId(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(PROJECT_ID_PATH_VARIABLE) String projectId, @RequestBody Mono<RequestTaskDto> restTaskDtoMono){
         return restTaskDtoMono
-                .flatMap(requestTaskDto -> taskService.createTaskByTokenAndProjectId(token, requestTaskDto.setProjectId(projectId)))
+                .flatMap(requestTaskDto -> {
+                    requestTaskDto.projectId = projectId;
+                    return taskService.createTaskByTokenAndProjectId(token, requestTaskDto);
+                })
                 .map(taskDto -> ResponseEntity.created(URI.create(TASKS_LOCATION)).body(taskDto));
     }
 
     @PatchMapping("/{id}")
     Mono<ResponseEntity<Task>> editTaskByTokenAndId(@RequestHeader(AUTHORIZATION_HEADER) String token, @PathVariable(ID_PATH_VARIABLE) String id, @RequestBody Mono<RequestTaskDto> restTaskDtoMono){
         return restTaskDtoMono
-                .flatMap(requestTaskDto -> taskService.editTaskByTokenAndId(token, requestTaskDto.setId(id)))
+                .flatMap(requestTaskDto -> {
+                    requestTaskDto.id = id;
+                    return taskService.editTaskByTokenAndId(token, requestTaskDto);
+                })
                 .map(ResponseEntity::ok);
     }
 
