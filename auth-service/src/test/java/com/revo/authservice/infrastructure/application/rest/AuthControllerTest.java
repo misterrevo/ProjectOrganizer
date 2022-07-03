@@ -29,6 +29,8 @@ class AuthControllerTest {
     private static final String EXAMPLE_TOKEN = "token";
     private static final String TEST_NAME = "test";
     private static final String TEST_EMAIL = "test@email.pl";
+    private static final String CONTENT_TYPE_HEADER_NAME = "Content-Type";
+    private static final String CONTENT_TYPE_HEADER_VALUE = "application/json";
 
     @Autowired
     private WebTestClient webTestClient;
@@ -105,6 +107,7 @@ class AuthControllerTest {
                 .post()
                 .uri(AUTHORIZE_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -119,6 +122,7 @@ class AuthControllerTest {
                 .post()
                 .uri(AUTHORIZE_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .exchange()
                 .expectStatus().isUnauthorized();
     }

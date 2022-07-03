@@ -28,6 +28,8 @@ class TaskControllerTest {
     private static final String TASK_END_POINT = "/tasks/1";
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String EXAMPLE_TOKEN = "token";
+    private static final String CONTENT_TYPE_HEADER_NAME = "Content-Type";
+    private static final String CONTENT_TYPE_HEADER_VALUE = "application/json";
 
     @Autowired
     private WebTestClient webTestClient;
@@ -53,6 +55,7 @@ class TaskControllerTest {
                 .uri(TASK_END_POINT)
                 .bodyValue(mapOnRequestTaskDto(task))
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .exchange()
                 .expectStatus().isCreated();
     }
@@ -68,6 +71,7 @@ class TaskControllerTest {
                 .uri(TASK_END_POINT)
                 .bodyValue(mapOnRequestTaskDto(task))
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .exchange()
                 .expectStatus().isBadRequest();
     }
@@ -83,6 +87,7 @@ class TaskControllerTest {
                 .uri(TASK_END_POINT)
                 .bodyValue(mapOnRequestTaskDto(task))
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .exchange()
                 .expectStatus().isUnauthorized();
     }
@@ -97,6 +102,7 @@ class TaskControllerTest {
                 .uri(TASK_END_POINT)
                 .bodyValue(mapOnRequestTaskDto(task))
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -112,6 +118,7 @@ class TaskControllerTest {
                 .uri(TASK_END_POINT)
                 .bodyValue(mapOnRequestTaskDto(task))
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .exchange()
                 .expectStatus().isBadRequest();
     }
@@ -127,6 +134,7 @@ class TaskControllerTest {
                 .uri(TASK_END_POINT)
                 .bodyValue(mapOnRequestTaskDto(task))
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .exchange()
                 .expectStatus().isUnauthorized();
     }
@@ -141,6 +149,7 @@ class TaskControllerTest {
                 .delete()
                 .uri(TASK_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -154,6 +163,7 @@ class TaskControllerTest {
                 .delete()
                 .uri(TASK_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .exchange()
                 .expectStatus().isUnauthorized();
     }

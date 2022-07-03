@@ -27,8 +27,11 @@ import static com.revo.projectservice.domain.Mapper.mapProjectFromRestDto;
 public class DomainServiceImp implements ProjectService, TaskService {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String GATEWAY_HOST = "http://localhost:8080";
-    private final ProjectRepository projectRepositoryPort;
     private static final String TRANSLATE_TOKEN_PATH = "/authorize";
+    private static final String CONTENT_TYPE_HEADER_NAME = "Content-Type";
+    private static final String CONTENT_TYPE_HEADER_VALUE = "application/json";
+
+    private final ProjectRepository projectRepositoryPort;
 
     public DomainServiceImp(ProjectRepository projectRepositoryPort) {
         this.projectRepositoryPort = projectRepositoryPort;
@@ -54,6 +57,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
                 .post()
                 .uri(TRANSLATE_TOKEN_PATH)
                 .header(AUTHORIZATION_HEADER, token)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError, throwNoPermissionException());
     }

@@ -29,6 +29,9 @@ class ProjectControllerTest {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String EXAMPLE_TOKEN = "token";
     private static final String SINGLE_PROJECT_END_POINT = "/projects/1";
+    private static final String CONTENT_TYPE_HEADER_NAME = "Content-Type";
+    private static final String CONTENT_TYPE_HEADER_VALUE = "application/json";
+
     @Autowired
     private WebTestClient webTestClient;
 
@@ -52,6 +55,7 @@ class ProjectControllerTest {
                 .get()
                 .uri(PROJECTS_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -66,6 +70,7 @@ class ProjectControllerTest {
                 .get()
                 .uri(PROJECTS_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .exchange()
                 .expectStatus().isUnauthorized();
     }
@@ -80,6 +85,7 @@ class ProjectControllerTest {
                 .get()
                 .uri(SINGLE_PROJECT_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -94,6 +100,7 @@ class ProjectControllerTest {
                 .get()
                 .uri(SINGLE_PROJECT_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .exchange()
                 .expectStatus().isUnauthorized();
     }
@@ -108,6 +115,7 @@ class ProjectControllerTest {
                 .post()
                 .uri(PROJECTS_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .bodyValue(mapOnRequestProjectDto(project))
                 .exchange()
                 .expectStatus().isCreated();
@@ -123,6 +131,7 @@ class ProjectControllerTest {
                 .post()
                 .uri(PROJECTS_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .bodyValue(mapOnRequestProjectDto(project))
                 .exchange()
                 .expectStatus().isUnauthorized();
@@ -138,6 +147,7 @@ class ProjectControllerTest {
                 .delete()
                 .uri(SINGLE_PROJECT_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .exchange()
                 .expectStatus().isOk();
     }
@@ -152,6 +162,7 @@ class ProjectControllerTest {
                 .delete()
                 .uri(SINGLE_PROJECT_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .exchange()
                 .expectStatus().isUnauthorized();
     }
@@ -166,6 +177,7 @@ class ProjectControllerTest {
                 .patch()
                 .uri(SINGLE_PROJECT_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .bodyValue(mapOnRequestProjectDto(project))
                 .exchange()
                 .expectStatus().isOk();
@@ -181,6 +193,7 @@ class ProjectControllerTest {
                 .patch()
                 .uri(SINGLE_PROJECT_END_POINT)
                 .header(AUTHORIZATION_HEADER, EXAMPLE_TOKEN)
+                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
                 .bodyValue(mapOnRequestProjectDto(project))
                 .exchange()
                 .expectStatus().isUnauthorized();
