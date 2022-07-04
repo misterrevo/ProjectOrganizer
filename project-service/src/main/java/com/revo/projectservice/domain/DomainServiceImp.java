@@ -7,6 +7,7 @@ import com.revo.projectservice.domain.exception.NoPermissionException;
 import com.revo.projectservice.domain.exception.NoTaskFoundException;
 import com.revo.projectservice.domain.exception.ProjectNotFoundException;
 import com.revo.projectservice.domain.exception.TaskDateOutOfRangeInProject;
+import com.revo.projectservice.domain.port.AuthService;
 import com.revo.projectservice.domain.port.ProjectRepository;
 import com.revo.projectservice.domain.port.ProjectService;
 import com.revo.projectservice.domain.port.TaskService;
@@ -25,16 +26,12 @@ import java.util.function.Function;
 import static com.revo.projectservice.domain.Mapper.mapProjectFromRestDto;
 
 public class DomainServiceImp implements ProjectService, TaskService {
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String GATEWAY_HOST = "http://localhost:8080";
-    private static final String TRANSLATE_TOKEN_PATH = "/authorize";
-    private static final String CONTENT_TYPE_HEADER_NAME = "Content-Type";
-    private static final String CONTENT_TYPE_HEADER_VALUE = "application/json";
-
     private final ProjectRepository projectRepositoryPort;
+    private final AuthService authService;
 
-    public DomainServiceImp(ProjectRepository projectRepositoryPort) {
+    public DomainServiceImp(ProjectRepository projectRepositoryPort, AuthService authService) {
         this.projectRepositoryPort = projectRepositoryPort;
+        this.authService = authService;
     }
 
     @Override
@@ -44,26 +41,11 @@ public class DomainServiceImp implements ProjectService, TaskService {
     }
 
     private Flux<AuthorizedUser> getAuthorizedUserFluxFromToken(String token) {
-        return getUserFromAuthServiceAsResponse(token)
-                .bodyToFlux(AuthorizedUser.class);
+        return authService.getAuthorizedUserFluxFromToken(token);
     }
 
     private Flux<Project> getAllProjectsByOwner(AuthorizedUser user) {
         return projectRepositoryPort.getAllProjectsByOwner(user.username);
-    }
-
-    private WebClient.ResponseSpec getUserFromAuthServiceAsResponse(String token) {
-        return WebClient.create(GATEWAY_HOST)
-                .post()
-                .uri(TRANSLATE_TOKEN_PATH)
-                .header(AUTHORIZATION_HEADER, token)
-                .header(CONTENT_TYPE_HEADER_NAME, CONTENT_TYPE_HEADER_VALUE)
-                .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, throwNoPermissionException());
-    }
-
-    private Function<ClientResponse, Mono<? extends Throwable>> throwNoPermissionException() {
-        return clientResponse -> Mono.error(new NoPermissionException());
     }
 
     @Override
@@ -74,8 +56,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
     }
 
     private Mono<AuthorizedUser> getAuthorizedUserMonoFromToken(String token) {
-        return getUserFromAuthServiceAsResponse(token)
-                .bodyToMono(AuthorizedUser.class);
+        return authService.getAuthorizedUserMonoFromToken(token);
     }
 
     private Mono<Project> getProjectNotFundExceptionError(String id) {

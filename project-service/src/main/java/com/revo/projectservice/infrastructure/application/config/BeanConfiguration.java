@@ -1,6 +1,7 @@
 package com.revo.projectservice.infrastructure.application.config;
 
 import com.revo.projectservice.domain.DomainServiceImp;
+import com.revo.projectservice.domain.port.AuthService;
 import com.revo.projectservice.domain.port.ProjectRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -12,7 +13,7 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 @EnableReactiveMongoRepositories(basePackages = "com.revo.projectservice.infrastructure")
 class BeanConfiguration {
     @Bean
-    public DomainServiceImp createServiceBean(ProjectRepository projectRepository){
-        return new DomainServiceImp(projectRepository);
+    public DomainServiceImp createServiceBean(ProjectRepository projectRepository, AuthService authService){
+        return new DomainServiceImp(projectRepository, authService);
     }
 }
