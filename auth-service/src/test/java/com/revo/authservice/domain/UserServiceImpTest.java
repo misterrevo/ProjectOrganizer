@@ -2,7 +2,6 @@ package com.revo.authservice.domain;
 
 import com.revo.authservice.domain.dto.AuthorizedUser;
 import com.revo.authservice.domain.exception.BadLoginException;
-import com.revo.authservice.domain.exception.EmailInUseException;
 import com.revo.authservice.domain.port.Encoder;
 import com.revo.authservice.domain.port.Jwt;
 import com.revo.authservice.domain.port.UserRepository;
@@ -14,8 +13,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImpTest {
@@ -41,8 +38,7 @@ class UserServiceImpTest {
     void shouldCreateUser() {
         //given
         //when
-        Mockito.when(userRepository.userExistsByEmail(Mockito.anyString())).thenReturn(Mono.just(false));
-        Mockito.when(userRepository.userExistsByUsername(Mockito.anyString())).thenReturn(Mono.just(false));
+        setRepositoryReturnExistsByEmailAndExistsByUsername(false, false);
         Mockito.when(userRepository.saveUser(Mockito.any(User.class))).thenReturn(Mono.just(user));
         //then
         Mono<User> userMono = userServiceImp.createUser(user);
@@ -55,8 +51,7 @@ class UserServiceImpTest {
     void shouldThrowErrorWhileCreatingUserIfUsernameIsInUse(){
         //given
         //when
-        Mockito.when(userRepository.userExistsByEmail(Mockito.anyString())).thenReturn(Mono.just(false));
-        Mockito.when(userRepository.userExistsByUsername(Mockito.anyString())).thenReturn(Mono.just(true));
+        setRepositoryReturnExistsByEmailAndExistsByUsername(false, true);
         //then
         Mono<User> userMono = userServiceImp.createUser(user);
         StepVerifier.create(userMono)
@@ -67,12 +62,16 @@ class UserServiceImpTest {
     void shouldThrowErrorWhileCreatingUserIfEmailIsInUse(){
         //given
         //when
-        Mockito.when(userRepository.userExistsByEmail(Mockito.anyString())).thenReturn(Mono.just(true));
-        Mockito.when(userRepository.userExistsByUsername(Mockito.anyString())).thenReturn(Mono.just(false));
+        setRepositoryReturnExistsByEmailAndExistsByUsername(true, false);
         //then
         Mono<User> userMono = userServiceImp.createUser(user);
         StepVerifier.create(userMono)
                 .expectError();
+    }
+
+    private void setRepositoryReturnExistsByEmailAndExistsByUsername(boolean existByEmail, boolean existsByUsername) {
+        Mockito.when(userRepository.userExistsByEmail(Mockito.anyString())).thenReturn(Mono.just(existByEmail));
+        Mockito.when(userRepository.userExistsByUsername(Mockito.anyString())).thenReturn(Mono.just(existsByUsername));
     }
 
     @Test
