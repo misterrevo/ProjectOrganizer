@@ -6,7 +6,6 @@ import com.revo.projectservice.domain.exception.NoPermissionException;
 import com.revo.projectservice.domain.exception.TaskDateOutOfRangeInProject;
 import com.revo.projectservice.domain.port.TaskService;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,7 +20,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @WebFluxTest(controllers = TaskController.class)
-@RunWith(SpringRunner.class)
 class TaskControllerTest {
     private static final String TASK_NAME = "Task";
     private static final String TASK_DESCRIPTION = "Description";

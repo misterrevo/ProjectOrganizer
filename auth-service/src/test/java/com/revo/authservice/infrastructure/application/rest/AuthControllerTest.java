@@ -6,7 +6,6 @@ import com.revo.authservice.domain.exception.BadLoginException;
 import com.revo.authservice.domain.exception.UsernameInUseException;
 import com.revo.authservice.domain.port.UserService;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,7 +18,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @WebFluxTest(controllers = AuthController.class)
-@RunWith(SpringRunner.class)
 class AuthControllerTest {
     private static final String REGISTER_END_POINT = "/register";
     private static final String LOGIN_END_POINT = "/login";

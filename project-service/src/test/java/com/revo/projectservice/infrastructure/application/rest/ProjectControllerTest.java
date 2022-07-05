@@ -5,7 +5,6 @@ import com.revo.projectservice.domain.dto.RequestProjectDto;
 import com.revo.projectservice.domain.exception.NoPermissionException;
 import com.revo.projectservice.domain.port.ProjectService;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,7 +20,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @WebFluxTest(controllers = ProjectController.class)
-@RunWith(SpringRunner.class)
 class ProjectControllerTest {
     private static final String PROJECT_NAME = "Test";
     private static final String OWNER_NAME = "Owner";
