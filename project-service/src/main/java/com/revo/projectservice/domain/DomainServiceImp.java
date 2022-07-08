@@ -66,11 +66,13 @@ public class DomainServiceImp implements ProjectService, TaskService {
     @Override
     public Mono<Project> createProjectByToken(String token, RequestProjectDto requestProjectDto) {
         return getAuthorizedUserMonoFromToken(token)
-                .flatMap(user -> {
-                    Project project = mapProjectFromRestDto(requestProjectDto);
-                    project.setOwner(user.username);
-                    return saveProjectDtoMono(project);
-                });
+                .flatMap(user -> updateProjectMono(mapProjectFromRestDto(requestProjectDto), user));
+    }
+
+    private Mono<Project> updateProjectMono(Project requestProjectDto, AuthorizedUser user) {
+        Project project = requestProjectDto;
+        project.setOwner(user.username);
+        return saveProjectDtoMono(project);
     }
 
     private Mono<Project> saveProjectDtoMono(Project project) {
@@ -90,11 +92,7 @@ public class DomainServiceImp implements ProjectService, TaskService {
     @Override
     public Mono<Project> editProjectByTokenAndId(String token, RequestProjectDto requestProjectDto) {
         return getAuthorizedUserMonoFromToken(token)
-                .flatMap(user -> {
-                    Project project = Mapper.mapProjectFromRestDto(requestProjectDto);
-                    project.setOwner(user.username);
-                    return saveProjectDtoMono(project);
-                });
+                .flatMap(user -> updateProjectMono(Mapper.mapProjectFromRestDto(requestProjectDto), user));
     }
 
     @Override
